@@ -1,0 +1,102 @@
+# ============================================================
+# Secrets & local environment
+# ============================================================
+.env
+.env.*
+!.env.example
+!*.env.example
+
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+build/
+develop-eggs/
+dist/
+wheels/
+MANIFEST
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.ipynb_checkpoints/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# ============================================================
+# Trained model checkpoints (regeneratable via `python train.py`)
+# ============================================================
+backend/checkpoints/*.pt
+backend/checkpoints/*.pth
+backend/checkpoints/*.bin
+backend/checkpoints/*.safetensors
+
+# ============================================================
+# Node / Vite / frontend build artifacts
+# ============================================================
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+frontend/dist/
+dist/
+.vite/
+.turbo/
+.next/
+.svelte-kit/
+.nuxt/
+.cache/
+.parcel-cache/
+
+# ============================================================
+# Logs
+# ============================================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ============================================================
+# OS / editor junk
+# ============================================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ============================================================
+# Local-only dev files
+# ============================================================
+*.local
+.local/
+
+# ============================================================
+# Temp / backup
+# ============================================================
+*.tmp
+*.bak
+*.backup
+*.orig

@@ -1,0 +1,235 @@
+ac_no,ac_name,reservation,district,region_5way,is_reserved,election_cycle
+1,Gummidipoondi,GEN,Tiruvallur,Chennai_Metro,0,TNLA_2026
+2,Ponneri,SC,Tiruvallur,Chennai_Metro,1,TNLA_2026
+3,Tiruttani,GEN,Tiruvallur,Chennai_Metro,0,TNLA_2026
+4,Thiruvallur,GEN,Tiruvallur,Chennai_Metro,0,TNLA_2026
+5,Poonamallee,SC,Tiruvallur,Chennai_Metro,1,TNLA_2026
+6,Avadi,GEN,Tiruvallur,Chennai_Metro,0,TNLA_2026
+7,Maduravoyal,GEN,Tiruvallur,Chennai_Metro,0,TNLA_2026
+8,Ambattur,GEN,Tiruvallur,Chennai_Metro,0,TNLA_2026
+9,Madavaram,GEN,Tiruvallur,Chennai_Metro,0,TNLA_2026
+10,Thiruvottiyur,GEN,Tiruvallur,Chennai_Metro,0,TNLA_2026
+11,Dr. Radhakrishnan Nagar,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+12,Perambur,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+13,Kolathur,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+14,Villivakkam,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+15,Thiru-Vi-Ka-Nagar,SC,Chennai,Chennai_Metro,1,TNLA_2026
+16,Egmore,SC,Chennai,Chennai_Metro,1,TNLA_2026
+17,Royapuram,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+18,Harbour,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+19,Chepauk-Thiruvallikeni,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+20,Thousand Lights,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+21,Anna Nagar,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+22,Virugampakkam,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+23,Saidapet,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+24,Thiyagarayanagar,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+25,Mylapore,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+26,Velachery,GEN,Chennai,Chennai_Metro,0,TNLA_2026
+27,Sholinganallur,GEN,Chengalpattu,Chennai_Metro,0,TNLA_2026
+28,Alandur,GEN,Kancheepuram,Chennai_Metro,0,TNLA_2026
+29,Sriperumbudur,SC,Kancheepuram,Chennai_Metro,1,TNLA_2026
+30,Pallavaram,GEN,Chengalpattu,Chennai_Metro,0,TNLA_2026
+31,Tambaram,GEN,Chengalpattu,Chennai_Metro,0,TNLA_2026
+32,Chengalpattu,GEN,Chengalpattu,Chennai_Metro,0,TNLA_2026
+33,Thiruporur,GEN,Chengalpattu,Chennai_Metro,0,TNLA_2026
+34,Cheyyur,SC,Chengalpattu,Chennai_Metro,1,TNLA_2026
+35,Madurantakam,SC,Chengalpattu,Chennai_Metro,1,TNLA_2026
+36,Uthiramerur,GEN,Kancheepuram,Chennai_Metro,0,TNLA_2026
+37,Kancheepuram,GEN,Kancheepuram,Chennai_Metro,0,TNLA_2026
+38,Arakkonam,SC,Ranipet,North,1,TNLA_2026
+39,Sholingur,GEN,Ranipet,North,0,TNLA_2026
+40,Katpadi,GEN,Vellore,North,0,TNLA_2026
+41,Ranipet,GEN,Ranipet,North,0,TNLA_2026
+42,Arcot,GEN,Ranipet,North,0,TNLA_2026
+43,Vellore,GEN,Vellore,North,0,TNLA_2026
+44,Anaikattu,GEN,Vellore,North,0,TNLA_2026
+45,Kilvaithinankuppam,SC,Vellore,North,1,TNLA_2026
+46,Gudiyattam,SC,Vellore,North,1,TNLA_2026
+47,Vaniyambadi,GEN,Tirupattur,North,0,TNLA_2026
+48,Ambur,GEN,Tirupattur,North,0,TNLA_2026
+49,Jolarpet,GEN,Tirupattur,North,0,TNLA_2026
+50,Tirupattur,GEN,Tirupattur,North,0,TNLA_2026
+51,Uthangarai,SC,Krishnagiri,North,1,TNLA_2026
+52,Bargur,GEN,Krishnagiri,North,0,TNLA_2026
+53,Krishnagiri,GEN,Krishnagiri,North,0,TNLA_2026
+54,Veppanahalli,GEN,Krishnagiri,North,0,TNLA_2026
+55,Hosur,GEN,Krishnagiri,North,0,TNLA_2026
+56,Thalli,GEN,Krishnagiri,North,0,TNLA_2026
+57,Palacode,GEN,Dharmapuri,North,0,TNLA_2026
+58,Pennagaram,GEN,Dharmapuri,North,0,TNLA_2026
+59,Dharmapuri,GEN,Dharmapuri,North,0,TNLA_2026
+60,Pappireddippatti,GEN,Dharmapuri,North,0,TNLA_2026
+61,Harur,SC,Dharmapuri,North,1,TNLA_2026
+62,Chengam,SC,Tiruvannamalai,North,1,TNLA_2026
+63,Tiruvannamalai,GEN,Tiruvannamalai,North,0,TNLA_2026
+64,Kilpennathur,GEN,Tiruvannamalai,North,0,TNLA_2026
+65,Kalasapakkam,GEN,Tiruvannamalai,North,0,TNLA_2026
+66,Polur,GEN,Tiruvannamalai,North,0,TNLA_2026
+67,Arani,GEN,Tiruvannamalai,North,0,TNLA_2026
+68,Cheyyar,GEN,Tiruvannamalai,North,0,TNLA_2026
+69,Vandavasi,SC,Tiruvannamalai,North,1,TNLA_2026
+70,Gingee,GEN,Viluppuram,North,0,TNLA_2026
+71,Mailam,GEN,Viluppuram,North,0,TNLA_2026
+72,Tindivanam,SC,Viluppuram,North,1,TNLA_2026
+73,Vanur,SC,Viluppuram,North,1,TNLA_2026
+74,Viluppuram,GEN,Viluppuram,North,0,TNLA_2026
+75,Vikravandi,GEN,Viluppuram,North,0,TNLA_2026
+76,Tirukkoyilur,GEN,Viluppuram,North,0,TNLA_2026
+77,Ulundurpettai,GEN,Kallakurichi,North,0,TNLA_2026
+78,Rishivandiyam,GEN,Kallakurichi,North,0,TNLA_2026
+79,Sankarapuram,GEN,Kallakurichi,North,0,TNLA_2026
+80,Kallakurichi,SC,Kallakurichi,North,1,TNLA_2026
+81,Gangavalli,SC,Salem,West,1,TNLA_2026
+82,Attur,SC,Salem,West,1,TNLA_2026
+83,Yercaud,ST,Salem,West,1,TNLA_2026
+84,Omalur,GEN,Salem,West,0,TNLA_2026
+85,Mettur,GEN,Salem,West,0,TNLA_2026
+86,Edappadi,GEN,Salem,West,0,TNLA_2026
+87,Sankari,GEN,Salem,West,0,TNLA_2026
+88,Salem West,GEN,Salem,West,0,TNLA_2026
+89,Salem North,GEN,Salem,West,0,TNLA_2026
+90,Salem South,GEN,Salem,West,0,TNLA_2026
+91,Veerapandi,GEN,Salem,West,0,TNLA_2026
+92,Rasipuram,SC,Namakkal,West,1,TNLA_2026
+93,Senthamangalam,ST,Namakkal,West,1,TNLA_2026
+94,Namakkal,GEN,Namakkal,West,0,TNLA_2026
+95,Paramathi-Velur,GEN,Namakkal,West,0,TNLA_2026
+96,Tiruchengodu,GEN,Namakkal,West,0,TNLA_2026
+97,Kumarapalayam,GEN,Namakkal,West,0,TNLA_2026
+98,Erode East,GEN,Erode,West,0,TNLA_2026
+99,Erode West,GEN,Erode,West,0,TNLA_2026
+100,Modakkurichi,GEN,Erode,West,0,TNLA_2026
+101,Dharapuram,SC,Tiruppur,West,1,TNLA_2026
+102,Kangayam,GEN,Tiruppur,West,0,TNLA_2026
+103,Perundurai,GEN,Erode,West,0,TNLA_2026
+104,Bhavani,GEN,Erode,West,0,TNLA_2026
+105,Anthiyur,GEN,Erode,West,0,TNLA_2026
+106,Gobichettipalayam,GEN,Erode,West,0,TNLA_2026
+107,Bhavanisagar,SC,Erode,West,1,TNLA_2026
+108,Udhagamandalam,GEN,The Nilgiris,West,0,TNLA_2026
+109,Gudalur,SC,The Nilgiris,West,1,TNLA_2026
+110,Coonoor,GEN,The Nilgiris,West,0,TNLA_2026
+111,Mettuppalayam,GEN,Coimbatore,West,0,TNLA_2026
+112,Avanashi,SC,Tiruppur,West,1,TNLA_2026
+113,Tiruppur North,GEN,Tiruppur,West,0,TNLA_2026
+114,Tiruppur South,GEN,Tiruppur,West,0,TNLA_2026
+115,Palladam,GEN,Tiruppur,West,0,TNLA_2026
+116,Sulur,GEN,Coimbatore,West,0,TNLA_2026
+117,Kavundampalayam,GEN,Coimbatore,West,0,TNLA_2026
+118,Coimbatore North,GEN,Coimbatore,West,0,TNLA_2026
+119,Thondamuthur,GEN,Coimbatore,West,0,TNLA_2026
+120,Coimbatore South,GEN,Coimbatore,West,0,TNLA_2026
+121,Singanallur,GEN,Coimbatore,West,0,TNLA_2026
+122,Kinathukadavu,GEN,Coimbatore,West,0,TNLA_2026
+123,Pollachi,GEN,Coimbatore,West,0,TNLA_2026
+124,Valparai,SC,Coimbatore,West,1,TNLA_2026
+125,Udumalaipettai,GEN,Tiruppur,West,0,TNLA_2026
+126,Madathukulam,GEN,Tiruppur,West,0,TNLA_2026
+127,Palani,GEN,Dindigul,Central,0,TNLA_2026
+128,Oddanchatram,GEN,Dindigul,Central,0,TNLA_2026
+129,Athoor,GEN,Dindigul,Central,0,TNLA_2026
+130,Nilakkottai,SC,Dindigul,Central,1,TNLA_2026
+131,Natham,GEN,Dindigul,Central,0,TNLA_2026
+132,Dindigul,GEN,Dindigul,Central,0,TNLA_2026
+133,Vedasandur,GEN,Dindigul,Central,0,TNLA_2026
+134,Aravakurichi,GEN,Karur,Central,0,TNLA_2026
+135,Karur,GEN,Karur,Central,0,TNLA_2026
+136,Krishnarayapuram,SC,Karur,Central,1,TNLA_2026
+137,Kulithalai,GEN,Karur,Central,0,TNLA_2026
+138,Manapparai,GEN,Tiruchirappalli,Central,0,TNLA_2026
+139,Srirangam,GEN,Tiruchirappalli,Central,0,TNLA_2026
+140,Tiruchirappalli West,GEN,Tiruchirappalli,Central,0,TNLA_2026
+141,Tiruchirappalli East,GEN,Tiruchirappalli,Central,0,TNLA_2026
+142,Thiruverumbur,GEN,Tiruchirappalli,Central,0,TNLA_2026
+143,Lalgudi,GEN,Tiruchirappalli,Central,0,TNLA_2026
+144,Manachanallur,GEN,Tiruchirappalli,Central,0,TNLA_2026
+145,Musiri,GEN,Tiruchirappalli,Central,0,TNLA_2026
+146,Thuraiyur,SC,Tiruchirappalli,Central,1,TNLA_2026
+147,Perambalur,SC,Perambalur,Central,1,TNLA_2026
+148,Kunnam,GEN,Perambalur,Central,0,TNLA_2026
+149,Ariyalur,GEN,Ariyalur,Central,0,TNLA_2026
+150,Jayankondam,GEN,Ariyalur,Central,0,TNLA_2026
+151,Tittakudi,SC,Cuddalore,Central,1,TNLA_2026
+152,Vriddhachalam,GEN,Cuddalore,Central,0,TNLA_2026
+153,Neyveli,GEN,Cuddalore,Central,0,TNLA_2026
+154,Panruti,GEN,Cuddalore,Central,0,TNLA_2026
+155,Cuddalore,GEN,Cuddalore,Central,0,TNLA_2026
+156,Kurinjipadi,GEN,Cuddalore,Central,0,TNLA_2026
+157,Bhuvanagiri,GEN,Cuddalore,Central,0,TNLA_2026
+158,Chidambaram,GEN,Cuddalore,Central,0,TNLA_2026
+159,Kattumannarkoil,SC,Cuddalore,Central,1,TNLA_2026
+160,Sirkazhi,SC,Mayiladuthurai,Central,1,TNLA_2026
+161,Mayiladuthurai,GEN,Mayiladuthurai,Central,0,TNLA_2026
+162,Poompuhar,GEN,Mayiladuthurai,Central,0,TNLA_2026
+163,Nagapattinam,GEN,Nagapattinam,Central,0,TNLA_2026
+164,Kilvelur,SC,Nagapattinam,Central,1,TNLA_2026
+165,Vedaranyam,GEN,Nagapattinam,Central,0,TNLA_2026
+166,Thiruthuraipoondi,SC,Thiruvarur,Central,1,TNLA_2026
+167,Mannargudi,GEN,Thiruvarur,Central,0,TNLA_2026
+168,Thiruvarur,GEN,Thiruvarur,Central,0,TNLA_2026
+169,Nannilam,GEN,Thiruvarur,Central,0,TNLA_2026
+170,Thiruvidaimarudur,SC,Thanjavur,Central,1,TNLA_2026
+171,Kumbakonam,GEN,Thanjavur,Central,0,TNLA_2026
+172,Papanasam,GEN,Thanjavur,Central,0,TNLA_2026
+173,Thiruvaiyaru,GEN,Thanjavur,Central,0,TNLA_2026
+174,Thanjavur,GEN,Thanjavur,Central,0,TNLA_2026
+175,Orathanadu,GEN,Thanjavur,Central,0,TNLA_2026
+176,Pattukkottai,GEN,Thanjavur,Central,0,TNLA_2026
+177,Peravurani,GEN,Thanjavur,Central,0,TNLA_2026
+178,Gandharvakottai,SC,Pudukkottai,Central,1,TNLA_2026
+179,Viralimalai,GEN,Pudukkottai,Central,0,TNLA_2026
+180,Pudukkottai,GEN,Pudukkottai,Central,0,TNLA_2026
+181,Thirumayam,GEN,Pudukkottai,Central,0,TNLA_2026
+182,Alangudi,GEN,Pudukkottai,Central,0,TNLA_2026
+183,Aranthangi,GEN,Pudukkottai,Central,0,TNLA_2026
+184,Karaikudi,GEN,Sivaganga,South,0,TNLA_2026
+185,Tiruppattur,GEN,Sivaganga,South,0,TNLA_2026
+186,Sivaganga,GEN,Sivaganga,South,0,TNLA_2026
+187,Manamadurai,SC,Sivaganga,South,1,TNLA_2026
+188,Melur,GEN,Madurai,South,0,TNLA_2026
+189,Madurai East,GEN,Madurai,South,0,TNLA_2026
+190,Sholavandan,SC,Madurai,South,1,TNLA_2026
+191,Madurai North,GEN,Madurai,South,0,TNLA_2026
+192,Madurai South,GEN,Madurai,South,0,TNLA_2026
+193,Madurai Central,GEN,Madurai,South,0,TNLA_2026
+194,Madurai West,GEN,Madurai,South,0,TNLA_2026
+195,Thiruparankundram,GEN,Madurai,South,0,TNLA_2026
+196,Thirumangalam,GEN,Madurai,South,0,TNLA_2026
+197,Usilampatti,GEN,Madurai,South,0,TNLA_2026
+198,Andipatti,GEN,Theni,South,0,TNLA_2026
+199,Periyakulam,SC,Theni,South,1,TNLA_2026
+200,Bodinayakanur,GEN,Theni,South,0,TNLA_2026
+201,Cumbum,GEN,Theni,South,0,TNLA_2026
+202,Rajapalayam,GEN,Virudhunagar,South,0,TNLA_2026
+203,Srivilliputhur,SC,Virudhunagar,South,1,TNLA_2026
+204,Sattur,GEN,Virudhunagar,South,0,TNLA_2026
+205,Sivakasi,GEN,Virudhunagar,South,0,TNLA_2026
+206,Virudhunagar,GEN,Virudhunagar,South,0,TNLA_2026
+207,Aruppukkottai,GEN,Virudhunagar,South,0,TNLA_2026
+208,Tiruchuli,GEN,Virudhunagar,South,0,TNLA_2026
+209,Paramakudi,SC,Ramanathapuram,South,1,TNLA_2026
+210,Tiruvadanai,GEN,Ramanathapuram,South,0,TNLA_2026
+211,Ramanathapuram,GEN,Ramanathapuram,South,0,TNLA_2026
+212,Mudhukulathur,GEN,Ramanathapuram,South,0,TNLA_2026
+213,Vilathikulam,GEN,Thoothukudi,South,0,TNLA_2026
+214,Thoothukkudi,GEN,Thoothukudi,South,0,TNLA_2026
+215,Tiruchendur,GEN,Thoothukudi,South,0,TNLA_2026
+216,Srivaikuntam,GEN,Thoothukudi,South,0,TNLA_2026
+217,Ottapidaram,SC,Thoothukudi,South,1,TNLA_2026
+218,Kovilpatti,GEN,Thoothukudi,South,0,TNLA_2026
+219,Sankarankovil,SC,Tenkasi,South,1,TNLA_2026
+220,Vasudevanallur,SC,Tenkasi,South,1,TNLA_2026
+221,Kadayanallur,GEN,Tenkasi,South,0,TNLA_2026
+222,Tenkasi,GEN,Tenkasi,South,0,TNLA_2026
+223,Alangulam,GEN,Tenkasi,South,0,TNLA_2026
+224,Tirunelveli,GEN,Tirunelveli,South,0,TNLA_2026
+225,Ambasamudram,GEN,Tirunelveli,South,0,TNLA_2026
+226,Palayamkottai,GEN,Tirunelveli,South,0,TNLA_2026
+227,Nanguneri,GEN,Tirunelveli,South,0,TNLA_2026
+228,Radhapuram,GEN,Tirunelveli,South,0,TNLA_2026
+229,Kanniyakumari,GEN,Kanniyakumari,South,0,TNLA_2026
+230,Nagercoil,GEN,Kanniyakumari,South,0,TNLA_2026
+231,Colachal,GEN,Kanniyakumari,South,0,TNLA_2026
+232,Padmanabhapuram,GEN,Kanniyakumari,South,0,TNLA_2026
+233,Vilavancode,GEN,Kanniyakumari,South,0,TNLA_2026
+234,Killiyoor,GEN,Kanniyakumari,South,0,TNLA_2026
