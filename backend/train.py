@@ -2,12 +2,12 @@
 Tamil Nadu Assembly Election 2026 - Training & Prediction Pipeline.
 
 Flow:
-  backend/data_files/*.csv  (merged by data_loader.py)
+  backend/dataset/data_files/*.csv  (merged by data_loader.py)
     -> feature extraction (categorical one-hots + numeric scaling)
     -> RepeatedKFold (5x3 = 15 folds)
     -> MLP ensemble with dual heads (classification + vote-share regression)
     -> ensemble_predict across all 15 models
-    -> predictions_2026.csv
+    -> backend/dataset/predictions/predictions_2026.csv
 
 Usage:
     python train.py
@@ -29,7 +29,7 @@ from sklearn.model_selection import RepeatedKFold
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import DataLoader, TensorDataset, WeightedRandomSampler
 
-from config import DISTRICTS, PARTIES, REGIONS
+from config import DISTRICTS, PARTIES, PREDICTIONS_DIR, REGIONS
 from data_loader import (
     VERIFIED_CATEG_COLS,
     VERIFIED_NUMERIC_COLS,
@@ -127,7 +127,7 @@ class ElectionDataset:
         self.config = Config()
         self.party_to_idx = {p: i for i, p in enumerate(self.config.parties)}
 
-        print("Loading data from backend/data_files/ ...")
+        print("Loading data from backend/dataset/data_files/ ...")
         self.df = load_training_dataframe()
 
         # Detect whether the verified sidecar is actually present on the
@@ -555,18 +555,19 @@ def main():
     mean_acc = np.mean(fold_accs)
     std_acc = np.std(fold_accs)
     print(f"\n  CV Accuracy: {mean_acc:.4f} +/- {std_acc:.4f}")
-    # Calibration caveat -- see backend/backtests/model_validation_summary.md
+    # Calibration caveat -- see backend/dataset/validation/model_validation_summary.md
     print("  NOTE: This CV accuracy is measured against the SYNTHETIC label")
     print("        proj_2026_winner (built from 2021 AC-level history). It is")
     print("        NOT real-world forecast accuracy. Real-world backtest CV:")
     print("          party-level   2016->2021: ~0.6325")
     print("          alliance-level 2016->2021: ~0.7607")
-    print("        See backend/backtests/model_validation_summary.md")
+    print("        See backend/dataset/validation/model_validation_summary.md")
 
     global_scaler = StandardScaler().fit(data.features)
     results = ensemble_predict(data, config, global_scaler)
 
-    out_path = os.path.join(_BACKEND_DIR, "predictions_2026.csv")
+    out_path = os.path.join(PREDICTIONS_DIR, "predictions_2026.csv")
+    os.makedirs(PREDICTIONS_DIR, exist_ok=True)
     results.to_csv(out_path, index=False)
     print(f"\n  Saved: {out_path}")
 

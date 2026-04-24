@@ -1,20 +1,23 @@
 """
 One-shot utility to transform backend/dataset/*.csv into the pipeline's
-CSVs in backend/data_files/. Runs stateless: re-executing overwrites outputs.
+CSVs in backend/dataset/data_files/. Runs stateless: re-executing overwrites
+outputs.
 
 This script is explicitly NOT part of the training pipeline. It exists only
 to materialise the canonical CSV form the rest of the pipeline consumes
 (column renames, alliance-row filters, percentage normalisation, etc.).
-The training path reads exclusively from backend/data_files/.
+The training path reads exclusively from backend/dataset/data_files/.
 """
 
 import os
 
 import pandas as pd
 
+from config import DATASET_DIR, DATA_FILES_DIR
+
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
-SRC_DIR = os.path.join(BACKEND_DIR, "dataset")
-DST_DIR = os.path.join(BACKEND_DIR, "data_files")
+SRC_DIR = DATASET_DIR
+DST_DIR = DATA_FILES_DIR
 os.makedirs(DST_DIR, exist_ok=True)
 
 

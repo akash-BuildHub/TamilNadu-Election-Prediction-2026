@@ -17,8 +17,10 @@ import os
 import re
 import pandas as pd
 
-OUT_DIR = "d:/My Projects/tamilnadu election prediction/backend/data_files"
-MASTER = "d:/My Projects/tamilnadu election prediction/backend/dataset/tamilnadu_assembly_constituency_2026.csv"
+from config import DATA_FILES_DIR, DATASET_DIR
+
+OUT_DIR = DATA_FILES_DIR
+MASTER = os.path.join(DATASET_DIR, "tamilnadu_assembly_constituency_2026.csv")
 
 os.makedirs(OUT_DIR, exist_ok=True)
 

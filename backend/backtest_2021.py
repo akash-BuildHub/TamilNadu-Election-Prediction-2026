@@ -11,7 +11,7 @@ This breaks the circular validation in train.py by:
 
 Standalone. Does NOT modify the main training pipeline.
 
-Outputs written to backend/backtests/:
+Outputs written to backend/dataset/backtests/:
   backtest_2021_predictions.csv       - per-AC true vs predicted, correct flag
   backtest_2021_metrics.json          - accuracy, F1, per-class report, cv + holdout
   backtest_2021_feature_importance.csv - RF importances, ranked
@@ -47,9 +47,11 @@ from sklearn.model_selection import (
 
 warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
 
+from config import BACKTESTS_DIR, DATASET_DIR
+
 BACKEND_DIR = Path(__file__).resolve().parent
-DATASET_PATH = BACKEND_DIR / "dataset" / "tn_model_dataset_updated.csv"
-OUT_DIR = BACKEND_DIR / "backtests"
+DATASET_PATH = Path(DATASET_DIR) / "tn_model_dataset_updated.csv"
+OUT_DIR = Path(BACKTESTS_DIR)
 
 # Input features -- strictly 2016 + structural. No 2021 leakage.
 NUMERIC_FEATS = [

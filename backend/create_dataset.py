@@ -3,7 +3,7 @@ Tamil Nadu 2026 projection engine.
 
 Flow:
   1. Load the constituency master (234 ACs) and the REAL per-AC 2016/2021
-     results from backend/data_files/.
+     results from backend/dataset/data_files/.
   2. Load state-level 2014/2019/2024 Lok Sabha + 2016/2021 Assembly vote
      shares to compute alliance-level swing signals.
   3. For each AC, blend:
@@ -13,8 +13,8 @@ Flow:
         - TVK/NTK-driven share transfer       (new-entrant signal)
         - district/region/reservation factors (structural signal)
      to produce proj_2026 vote-share targets per AC and a projected winner.
-  4. Write backend/data_files/tamilnadu_assembly_2026.csv -- consumed by
-     data_loader.load_training_dataframe().
+  4. Write backend/dataset/data_files/tamilnadu_assembly_2026.csv --
+     consumed by data_loader.load_training_dataframe().
 
 This module is cleanly separable from the model. A curated
 tamilnadu_assembly_2026.csv can replace the generated CSV later without
@@ -29,10 +29,10 @@ from typing import Dict
 import numpy as np
 import pandas as pd
 
-from config import PARTIES  # ["DMK_ALLIANCE","AIADMK_NDA","TVK","OTHERS"]
+from config import DATA_FILES_DIR, PARTIES  # ["DMK_ALLIANCE","AIADMK_NDA","TVK","OTHERS"]
 
 _BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
-_DATA_DIR = os.path.join(_BACKEND_DIR, "data_files")
+_DATA_DIR = DATA_FILES_DIR
 
 # ---------------------------------------------------------------------------
 # Historical alliance mappings per year. Parties move between alliances, so

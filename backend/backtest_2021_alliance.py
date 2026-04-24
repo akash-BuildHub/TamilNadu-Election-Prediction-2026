@@ -25,7 +25,7 @@ Three models compared with identical feature matrix + splits:
   - GradientBoostingClassifier (usually strong on tabular)
   - LogisticRegression with scaling (interpretable linear baseline)
 
-Outputs to backend/backtests/:
+Outputs to backend/dataset/backtests/:
   backtest_2021_alliance_predictions.csv          - best-model per-AC preds
   backtest_2021_alliance_metrics.json             - all models, CV + holdout
   backtest_2021_alliance_feature_importance.csv   - RF importance, ranked
@@ -63,9 +63,11 @@ from sklearn.preprocessing import StandardScaler
 warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
+from config import BACKTESTS_DIR, DATASET_DIR
+
 BACKEND_DIR = Path(__file__).resolve().parent
-DATASET_PATH = BACKEND_DIR / "dataset" / "tn_model_dataset_updated.csv"
-OUT_DIR = BACKEND_DIR / "backtests"
+DATASET_PATH = Path(DATASET_DIR) / "tn_model_dataset_updated.csv"
+OUT_DIR = Path(BACKTESTS_DIR)
 
 NUMERIC_FEATS = [
     "turnout_pct_2016", "margin_pct_2016",

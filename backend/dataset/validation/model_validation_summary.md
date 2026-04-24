@@ -42,12 +42,13 @@ not a prediction score.
 
 > Internal synthetic-label CV accuracy: 91.04%. Historical backtest accuracy: 63.25% party-level and 76.07% alliance-level. Treat constituency-level predictions as directional, not guaranteed.
 
-## Confidence columns in predictions_2026.csv
+## Confidence columns in dataset/predictions/predictions_2026.csv
 
 The `confidence` column is the top-1 predicted-party probability
 from the model's softmax. It is a relative model-confidence score,
 **not a calibrated probability of the real-world event**. The
-validated CSV explicitly tags every row with
+validated CSV (`dataset/predictions/predictions_2026_validated.csv`)
+explicitly tags every row with
 `confidence_type = "relative_model_confidence_not_true_probability"` to make this unambiguous
 to downstream consumers.
 

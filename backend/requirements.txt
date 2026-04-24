@@ -1,0 +1,13 @@
+# Runtime-only dependencies for the Railway deployment.
+# This is the slim set that backend/server.py actually needs at request time:
+#   - pandas    -> used by data/live_collectors.py (sentiment endpoints)
+#   - numpy     -> transitive dep of pandas; also used by sentiment_extractor
+#   - requests  -> used by data/live_collectors.py to hit X / YouTube / NewsAPI
+#
+# Training / data-building / backtests require the FULL dependency set in
+# the repo-root requirements.txt (adds torch, scikit-learn, matplotlib,
+# seaborn, ~2GB). Those are never invoked inside the deployed server,
+# so we keep the runtime image small.
+pandas>=2.0
+numpy>=1.24
+requests>=2.31

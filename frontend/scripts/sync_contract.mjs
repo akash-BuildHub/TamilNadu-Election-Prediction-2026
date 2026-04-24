@@ -41,12 +41,21 @@ function sha256OfFile(filePath) {
 
 function main() {
   const { frontendDir, backendDir } = resolvePaths();
-  const predictionsPath = path.join(backendDir, "predictions_2026.csv");
+  // Canonical location after the dataset reorg; keep the legacy path as
+  // a read-only fallback for anyone with pre-reorg artefacts.
+  const predictionsPathNew = path.join(
+    backendDir, "dataset", "predictions", "predictions_2026.csv"
+  );
+  const predictionsPathLegacy = path.join(backendDir, "predictions_2026.csv");
+  const predictionsPath = existsSync(predictionsPathNew)
+    ? predictionsPathNew
+    : predictionsPathLegacy;
   const serverPath = path.join(backendDir, "server.py");
 
   if (!existsSync(predictionsPath)) {
     throw new Error(
-      `Missing ${predictionsPath}. Generate predictions first (python backend/train.py) before deploying frontend.`
+      `Missing predictions_2026.csv (checked ${predictionsPathNew} and ${predictionsPathLegacy}). ` +
+        "Generate predictions first (python backend/train.py) before deploying frontend."
     );
   }
 

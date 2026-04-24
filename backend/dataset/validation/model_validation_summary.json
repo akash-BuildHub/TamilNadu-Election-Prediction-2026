@@ -20,7 +20,7 @@
   "confidence_type": "relative_model_confidence_not_true_probability",
   "sources": {
     "train_py_cv": "backend/train.py (CV Accuracy line)",
-    "party_backtest": "backend/backtests/backtest_2021_metrics.json",
-    "alliance_backtest": "backend/backtests/backtest_2021_alliance_metrics.json"
+    "party_backtest": "backend/dataset/backtests/backtest_2021_metrics.json",
+    "alliance_backtest": "backend/dataset/backtests/backtest_2021_alliance_metrics.json"
   }
 }

@@ -1,10 +1,10 @@
 """
 CSV-driven training-data loader for Tamil Nadu Assembly Election 2026.
 
-Reads all Tamil Nadu CSVs under backend/data_files/ and merges them into a
-single 234-row constituency-level DataFrame ready for the model.
+Reads all Tamil Nadu CSVs under backend/dataset/data_files/ and merges them
+into a single 234-row constituency-level DataFrame ready for the model.
 
-Inputs (all under backend/data_files/):
+Inputs (all under backend/dataset/data_files/):
   Per-constituency (234 rows):
     tamilnadu_constituency_master_2026.csv  -- spine: ac_no, ac_name, district,
                                                region_5way, reservation, is_reserved
@@ -51,10 +51,11 @@ from typing import Dict, Optional
 import numpy as np
 import pandas as pd
 
-from config import PARTIES  # ["DMK_ALLIANCE","AIADMK_NDA","TVK","OTHERS"]
+from config import DATA_FILES_DIR, DATASET_DIR, PARTIES
+# ["DMK_ALLIANCE","AIADMK_NDA","TVK","OTHERS"]
 
-_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data_files")
-_DATASET_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset")
+_DATA_DIR = DATA_FILES_DIR
+_DATASET_DIR = DATASET_DIR
 
 # Verified sidecar: tn_model_dataset_updated.csv (produced by build_model_dataset.py).
 # These are the only columns we pull in for now -- historical-only, no 2024 LS
@@ -423,7 +424,7 @@ def load_training_dataframe() -> pd.DataFrame:
     if missing:
         raise ValueError(
             f"{missing} constituencies missing 2021 history. "
-            f"Regenerate backend/data_files/tamilnadu_assembly_2026.csv."
+            f"Regenerate backend/dataset/data_files/tamilnadu_assembly_2026.csv."
         )
 
     # District-level aggregates

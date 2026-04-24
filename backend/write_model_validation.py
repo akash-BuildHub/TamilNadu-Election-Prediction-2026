@@ -3,11 +3,10 @@ Write the model-validation artefacts so users and downstream consumers never
 mistake the ~91% train.py CV score for real-world forecasting accuracy.
 
 Outputs (all reproducible -- re-run after each training cycle):
-  backend/backtests/model_validation_summary.md    human-readable
-  backend/backtests/model_validation_summary.json  machine-readable
-  backend/predictions_2026_validated.csv           copy of predictions_2026.csv
-                                                   + confidence_type
-                                                   + validation_note
+  backend/dataset/validation/model_validation_summary.md    human-readable
+  backend/dataset/validation/model_validation_summary.json  machine-readable
+  backend/dataset/predictions/predictions_2026_validated.csv
+      copy of predictions_2026.csv + confidence_type + validation_note
 
 Does NOT modify predictions_2026.csv, train.py outputs, or any checkpoints.
 
@@ -21,12 +20,13 @@ import csv
 import json
 from pathlib import Path
 
+from config import PREDICTIONS_DIR, VALIDATION_DIR
+
 BACKEND_DIR = Path(__file__).resolve().parent
-BACKTESTS_DIR = BACKEND_DIR / "backtests"
-PREDICTIONS_IN = BACKEND_DIR / "predictions_2026.csv"
-PREDICTIONS_OUT = BACKEND_DIR / "predictions_2026_validated.csv"
-MD_OUT = BACKTESTS_DIR / "model_validation_summary.md"
-JSON_OUT = BACKTESTS_DIR / "model_validation_summary.json"
+PREDICTIONS_IN = Path(PREDICTIONS_DIR) / "predictions_2026.csv"
+PREDICTIONS_OUT = Path(PREDICTIONS_DIR) / "predictions_2026_validated.csv"
+MD_OUT = Path(VALIDATION_DIR) / "model_validation_summary.md"
+JSON_OUT = Path(VALIDATION_DIR) / "model_validation_summary.json"
 
 # The authoritative validation numbers. Sourced from:
 #   train.py                 -> synthetic-label CV run
@@ -34,7 +34,8 @@ JSON_OUT = BACKTESTS_DIR / "model_validation_summary.json"
 #   backtest_2021_alliance.py -> alliance-level historical backtest
 #
 # Update these constants if you re-run any of the three and want the summary
-# to reflect the latest numbers. Each has a corresponding JSON in backtests/.
+# to reflect the latest numbers. Each backtest has a corresponding JSON in
+# backend/dataset/backtests/.
 TRAIN_CV_ACCURACY = 0.9104
 TRAIN_CV_STD = 0.1037
 PARTY_BACKTEST_CV = 0.6325
@@ -100,12 +101,13 @@ def write_markdown() -> None:
         "",
         f"> {VALIDATION_NOTE}",
         "",
-        "## Confidence columns in predictions_2026.csv",
+        "## Confidence columns in dataset/predictions/predictions_2026.csv",
         "",
         "The `confidence` column is the top-1 predicted-party probability",
         "from the model's softmax. It is a relative model-confidence score,",
         "**not a calibrated probability of the real-world event**. The",
-        "validated CSV explicitly tags every row with",
+        "validated CSV (`dataset/predictions/predictions_2026_validated.csv`)",
+        "explicitly tags every row with",
         f"`confidence_type = \"{CONFIDENCE_TYPE}\"` to make this unambiguous",
         "to downstream consumers.",
         "",
@@ -147,8 +149,8 @@ def write_json() -> None:
         "confidence_type": CONFIDENCE_TYPE,
         "sources": {
             "train_py_cv": "backend/train.py (CV Accuracy line)",
-            "party_backtest": "backend/backtests/backtest_2021_metrics.json",
-            "alliance_backtest": "backend/backtests/backtest_2021_alliance_metrics.json",
+            "party_backtest": "backend/dataset/backtests/backtest_2021_metrics.json",
+            "alliance_backtest": "backend/dataset/backtests/backtest_2021_alliance_metrics.json",
         },
     }
     JSON_OUT.parent.mkdir(exist_ok=True)

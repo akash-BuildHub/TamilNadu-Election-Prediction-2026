@@ -6,11 +6,29 @@ from typing import Dict, List
 # Base directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CHECKPOINTS_DIR = os.path.join(BASE_DIR, "checkpoints")
-DATA_FILES_DIR = os.path.join(BASE_DIR, "data_files")
+
+# All data artifacts live under backend/dataset/. backend/ holds code only.
+#   DATASET_DIR       -> hand-curated source CSVs + downloaded OpenCity CSVs
+#                        + outputs of build_model_dataset.py
+#   DATA_FILES_DIR    -> normalised training CSVs (build_data_files.py,
+#                        build_historical_results.py, create_dataset.py)
+#   PREDICTIONS_DIR   -> predictions_2026.csv + predictions_2026_validated.csv
+#                        (train.py + write_model_validation.py)
+#   BACKTESTS_DIR     -> backtest_2021_* raw outputs (backtest_2021*.py)
+#   VALIDATION_DIR    -> model_validation_summary.{md,json}
+#                        (write_model_validation.py)
 DATASET_DIR = os.path.join(BASE_DIR, "dataset")
+DATA_FILES_DIR = os.path.join(DATASET_DIR, "data_files")
+PREDICTIONS_DIR = os.path.join(DATASET_DIR, "predictions")
+BACKTESTS_DIR = os.path.join(DATASET_DIR, "backtests")
+VALIDATION_DIR = os.path.join(DATASET_DIR, "validation")
 
 os.makedirs(CHECKPOINTS_DIR, exist_ok=True)
+os.makedirs(DATASET_DIR, exist_ok=True)
 os.makedirs(DATA_FILES_DIR, exist_ok=True)
+os.makedirs(PREDICTIONS_DIR, exist_ok=True)
+os.makedirs(BACKTESTS_DIR, exist_ok=True)
+os.makedirs(VALIDATION_DIR, exist_ok=True)
 
 # Alliance classes used as model labels. See README of this module.
 #   DMK_ALLIANCE: DMK + Congress + CPI + CPI(M) + VCK + DMDK + MDMK + IUML + allies
