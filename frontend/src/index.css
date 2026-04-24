@@ -156,6 +156,11 @@ body {
   line-height: 1.45;
 }
 
+.hero-tagline .accent {
+  color: #1b2568;
+  font-weight: 700;
+}
+
 .error-banner {
   border: 1px solid rgba(217, 119, 6, 0.45);
   background: rgba(254, 243, 199, 0.8);
@@ -496,13 +501,106 @@ h2 {
 
 .filters-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.78rem;
   align-items: end;
 }
 
-.search-wrap {
-  grid-column: 1 / -1;
+.search-wrap,
+.combo-wrap {
+  grid-column: auto;
+  position: relative;
+}
+
+.filters-block {
+  position: relative;
+  z-index: 3;
+}
+
+.seat-distribution-block {
+  position: relative;
+  z-index: 1;
+}
+
+.combo-toggle {
+  width: 100%;
+  padding: 0.6rem 0.72rem;
+  border-radius: 0.72rem;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.2);
+  color: #3f4a63;
+  font: inherit;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.combo-toggle > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.combo-toggle:focus-visible {
+  outline: 2px solid rgba(27, 37, 104, 0.35);
+  outline-offset: 1px;
+}
+
+.combo-chevron {
+  color: #8f9bad;
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.combo-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin: 0.3rem 0 0;
+  padding: 0.3rem 0;
+  list-style: none;
+  z-index: 20;
+  background: #ffffff;
+  border: 1px solid var(--glass-border);
+  border-radius: 0.72rem;
+  box-shadow: 0 10px 28px rgba(29, 42, 91, 0.18);
+  max-height: calc(5 * 2.1rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.combo-list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.combo-item {
+  height: 2.1rem;
+  display: flex;
+  align-items: center;
+  padding: 0 0.72rem;
+  font-size: 0.88rem;
+  color: #3f4a63;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.combo-item:hover,
+.combo-item[aria-selected="true"] {
+  background: rgba(27, 37, 104, 0.08);
+  color: #1b2568;
 }
 
 label {

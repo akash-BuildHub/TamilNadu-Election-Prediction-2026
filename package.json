@@ -1,0 +1,16 @@
+{
+  "name": "tamilnadu-election-prediction",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Tamil Nadu 2026 election prediction — root runner for backend (Python) + frontend (Vite).",
+  "scripts": {
+    "dev": "node scripts/ensure-setup.mjs && concurrently -n backend,frontend -c blue.bold,green.bold -k \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "node scripts/run-backend.mjs",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "setup": "node scripts/ensure-setup.mjs --force",
+    "postinstall": "npm --prefix frontend install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

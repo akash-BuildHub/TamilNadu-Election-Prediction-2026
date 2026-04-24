@@ -87,10 +87,29 @@ export function App() {
   const [district, setDistrict] = useState("ALL");
   const [party, setParty] = useState<Party | "ALL">("ALL");
   const [query, setQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [districtOpen, setDistrictOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement | null>(null);
+  const districtRef = useRef<HTMLDivElement | null>(null);
   const middleStageRef = useRef<HTMLElement | null>(null);
   const hasAnimatedMiddleStageRef = useRef(hasAnimatedMiddleStageInSession);
   const prefersReducedMotion = useReducedMotion();
   const deferredQuery = useDeferredValue(query);
+
+  useEffect(() => {
+    if (!searchOpen && !districtOpen) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (searchOpen && searchRef.current && !searchRef.current.contains(target)) {
+        setSearchOpen(false);
+      }
+      if (districtOpen && districtRef.current && !districtRef.current.contains(target)) {
+        setDistrictOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [searchOpen, districtOpen]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -150,6 +169,16 @@ export function App() {
   const districts = useMemo(() => {
     return [...new Set(rows.map((r) => r.district))].sort((a, b) => a.localeCompare(b));
   }, [rows]);
+
+  const constituencyOptions = useMemo(() => {
+    const q = deferredQuery.trim().toLowerCase();
+    const base = q
+      ? rows.filter((r) => r.constituency.toLowerCase().includes(q))
+      : rows;
+    return [...base]
+      .sort((a, b) => a.ac_no - b.ac_no)
+      .map((r) => r.constituency);
+  }, [rows, deferredQuery]);
 
   const filteredRows = useMemo(() => {
     const q = deferredQuery.trim().toLowerCase();
@@ -276,11 +305,13 @@ export function App() {
                 height={56}
                 decoding="async"
               />
-              <h1 className="brand-title">Tamil Nadu Election Prediction 2026</h1>
+              <h1 className="brand-title">Election Prediction</h1>
             </div>
             <p className="hero-tagline">
-              Track projections across all 234 Tamil Nadu Assembly constituencies
-              and see who forms the next state government.
+              Our <span className="accent">Intelligent AI</span> tracked every
+              vote across <span className="accent">Tamil Nadu&rsquo;s</span>{" "}
+              constituencies, uncovered key trends, and predicted who will form
+              the next government.
             </p>
           </div>
         </header>
@@ -325,33 +356,63 @@ export function App() {
 
               <article className="panel center-card">
                 <div className="center-inner-grid">
-                  <section className="inner-block">
+                  <section className="inner-block filters-block">
                     <h2>Filters</h2>
                     <div className="filters-grid">
-                      <div>
+                      <div className="combo-wrap" ref={districtRef}>
                         <label htmlFor="district">District</label>
-                        <select
+                        <button
                           id="district"
-                          value={district}
-                          onChange={(e) => setDistrict(e.target.value)}
+                          type="button"
+                          className="combo-toggle"
+                          aria-haspopup="listbox"
+                          aria-expanded={districtOpen}
+                          onClick={() => setDistrictOpen((o) => !o)}
                         >
-                          <option value="ALL">All Districts</option>
-                          {districts.map((d) => (
-                            <option key={d} value={d}>
-                              {d}
-                            </option>
-                          ))}
-                        </select>
+                          <span>{district === "ALL" ? "All Districts" : district}</span>
+                          <span className="combo-chevron" aria-hidden="true">
+                            ▾
+                          </span>
+                        </button>
+                        {districtOpen && (
+                          <ul className="combo-list" role="listbox">
+                            <li
+                              role="option"
+                              aria-selected={district === "ALL"}
+                              className="combo-item"
+                              onClick={() => {
+                                setDistrict("ALL");
+                                setDistrictOpen(false);
+                              }}
+                            >
+                              All Districts
+                            </li>
+                            {districts.map((d) => (
+                              <li
+                                key={d}
+                                role="option"
+                                aria-selected={district === d}
+                                className="combo-item"
+                                onClick={() => {
+                                  setDistrict(d);
+                                  setDistrictOpen(false);
+                                }}
+                              >
+                                {d}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
 
                       <div>
-                        <label htmlFor="party">Predicted Front</label>
+                        <label htmlFor="party">Predicted Party</label>
                         <select
                           id="party"
                           value={party}
                           onChange={(e) => setParty(e.target.value as Party | "ALL")}
                         >
-                          <option value="ALL">All Fronts</option>
+                          <option value="ALL">All Parties</option>
                           {DISPLAY_PARTIES.map((p) => (
                             <option key={p} value={p}>
                               {PARTY_LABELS[p]}
@@ -360,15 +421,45 @@ export function App() {
                         </select>
                       </div>
 
-                      <div className="search-wrap">
+                      <div className="search-wrap" ref={searchRef}>
                         <label htmlFor="search">Search Constituency</label>
                         <input
                           id="search"
                           type="text"
                           value={query}
-                          placeholder="Type constituency name..."
-                          onChange={(e) => setQuery(e.target.value)}
+                          placeholder="Type or select..."
+                          autoComplete="off"
+                          role="combobox"
+                          aria-expanded={searchOpen}
+                          aria-controls="constituency-list"
+                          onChange={(e) => {
+                            setQuery(e.target.value);
+                            setSearchOpen(true);
+                          }}
+                          onFocus={() => setSearchOpen(true)}
                         />
+                        {searchOpen && constituencyOptions.length > 0 && (
+                          <ul
+                            id="constituency-list"
+                            className="combo-list"
+                            role="listbox"
+                          >
+                            {constituencyOptions.map((name) => (
+                              <li
+                                key={name}
+                                role="option"
+                                aria-selected={query === name}
+                                className="combo-item"
+                                onClick={() => {
+                                  setQuery(name);
+                                  setSearchOpen(false);
+                                }}
+                              >
+                                {name}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     </div>
                   </section>
