@@ -46,7 +46,7 @@ from __future__ import annotations
 
 import os
 import warnings
-from typing import Dict
+from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
@@ -54,6 +54,40 @@ import pandas as pd
 from config import PARTIES  # ["DMK_ALLIANCE","AIADMK_NDA","TVK","OTHERS"]
 
 _DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data_files")
+_DATASET_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset")
+
+# Verified sidecar: tn_model_dataset_updated.csv (produced by build_model_dataset.py).
+# These are the only columns we pull in for now -- historical-only, no 2024 LS
+# segments, no 2026 candidate fields, no TVK/sentiment/prediction fields.
+_VERIFIED_SIDECAR_PATH = os.path.join(_DATASET_DIR, "tn_model_dataset_updated.csv")
+
+# Sidecar columns get a "verified_" prefix once merged into the training df,
+# so they never collide with base-pipeline fields that happen to share a name
+# (e.g. create_dataset.py already produces its own margin_pct_2021).
+# The raw source columns in the CSV do NOT have this prefix.
+_SIDECAR_NUMERIC_SOURCE = [
+    "turnout_pct_2016", "margin_pct_2016",
+    "dmk_vote_share_2016", "aiadmk_vote_share_2016", "bjp_vote_share_2016",
+    "congress_vote_share_2016", "ntk_vote_share_2016", "others_vote_share_2016",
+    "turnout_pct_2021", "margin_pct_2021",
+    "dmk_vote_share_2021", "aiadmk_vote_share_2021", "bjp_vote_share_2021",
+    "congress_vote_share_2021", "ntk_vote_share_2021", "others_vote_share_2021",
+]
+_SIDECAR_CATEG_SOURCE = [
+    "winner_party_2016", "winner_party_2021",
+    "runner_up_party_2016", "runner_up_party_2021",
+]
+
+VERIFIED_NUMERIC_COLS = [f"verified_{c}" for c in _SIDECAR_NUMERIC_SOURCE]
+VERIFIED_CATEG_COLS = [f"verified_{c}" for c in _SIDECAR_CATEG_SOURCE]
+
+# Fixed party vocabulary for one-hot encoding of the categorical sidecar cols.
+# Any code not in this list maps to "Other". Missing cells map to "UNKNOWN".
+VERIFIED_PARTY_VOCAB = [
+    "DMK", "AIADMK", "INC", "BJP", "PMK", "CPI", "CPI(M)", "VCK",
+    "DMDK", "MDMK", "IUML", "AMMK", "MNM", "NTK", "IND",
+    "Other", "UNKNOWN",
+]
 
 CONFIDENCE_MAP = {
     "Low": 0.20,
@@ -114,6 +148,76 @@ def _try_read(name: str) -> pd.DataFrame | None:
         return pd.read_csv(path)
     except pd.errors.EmptyDataError:
         return None
+
+
+# ---------------------------------------------------------------------------
+# Verified sidecar loader
+# ---------------------------------------------------------------------------
+
+def load_verified_model_dataset() -> Optional[pd.DataFrame]:
+    """
+    Load the verified sidecar dataset (backend/dataset/tn_model_dataset_updated.csv)
+    and return a 234-row DataFrame with only the historical columns listed in
+    VERIFIED_NUMERIC_COLS + VERIFIED_CATEG_COLS, keyed by ac_no.
+
+    Returns None if the sidecar file is absent (pipeline still works without it).
+
+    Missing-value policy applied here:
+      - Numeric cells that were blank in the CSV -> filled with the column
+        median (computed on the available values). Only a handful of cells
+        are typically blank (e.g. the 2 byelection ACs for 2016 turnout/
+        margin/vote-share), so median is a safer fill than 0.
+      - Categorical cells that were blank or "needs_source" -> "UNKNOWN".
+      - Any party code not in VERIFIED_PARTY_VOCAB -> "Other".
+
+    The string literal "needs_source" is never allowed to survive into the
+    model input.
+    """
+    if not os.path.exists(_VERIFIED_SIDECAR_PATH):
+        return None
+
+    df = pd.read_csv(_VERIFIED_SIDECAR_PATH)
+
+    required_src = ["ac_no"] + _SIDECAR_NUMERIC_SOURCE + _SIDECAR_CATEG_SOURCE
+    missing = [c for c in required_src if c not in df.columns]
+    if missing:
+        raise ValueError(
+            f"Verified sidecar is missing expected columns: {missing}. "
+            f"Re-run backend/build_model_dataset.py."
+        )
+
+    out = df[required_src].copy()
+    out["ac_no"] = out["ac_no"].astype(int)
+
+    # Numeric fill: column median, falling back to 0 if a column is
+    # entirely NaN (shouldn't happen for these historical fields).
+    for c in _SIDECAR_NUMERIC_SOURCE:
+        s = pd.to_numeric(out[c], errors="coerce")
+        med = s.median()
+        if pd.isna(med):
+            med = 0.0
+        out[c] = s.fillna(med)
+
+    # Categorical fill: blanks / NaN / literal "needs_source" -> UNKNOWN,
+    # and any party outside the vocab collapses to "Other".
+    vocab = set(VERIFIED_PARTY_VOCAB)
+    for c in _SIDECAR_CATEG_SOURCE:
+        s = out[c].astype("object")
+        s = s.where(~s.isna(), "UNKNOWN")
+        s = s.replace({"needs_source": "UNKNOWN", "": "UNKNOWN"})
+        s = s.astype(str).str.strip()
+        s = s.where(s.isin(vocab), "Other")
+        s = s.where(s != "", "UNKNOWN")
+        out[c] = s
+
+    # Prefix all non-key columns with "verified_" to prevent collision with
+    # base-pipeline columns (e.g. margin_pct_2021 also lives in create_dataset
+    # output) and make the A/B separation explicit downstream.
+    rename_map = {c: f"verified_{c}"
+                  for c in _SIDECAR_NUMERIC_SOURCE + _SIDECAR_CATEG_SOURCE}
+    out = out.rename(columns=rename_map)
+
+    return out
 
 
 def _alliance_shares_from_table(df: pd.DataFrame, year: int | None, kind: str) -> Dict[str, float]:
@@ -356,6 +460,40 @@ def load_training_dataframe() -> pd.DataFrame:
     voter = _state_voter_features()
     for k, v in voter.items():
         df[k] = v
+
+    # Verified sidecar merge (opt-out via TN2026_DISABLE_SIDECAR=1).
+    sidecar_disabled = os.environ.get("TN2026_DISABLE_SIDECAR", "").lower() in ("1", "true", "yes")
+    if sidecar_disabled:
+        print("[sidecar] disabled via TN2026_DISABLE_SIDECAR")
+    else:
+        sidecar = load_verified_model_dataset()
+        if sidecar is None:
+            print(f"[sidecar] skipped (file not found at "
+                  f"{os.path.relpath(_VERIFIED_SIDECAR_PATH)})")
+        else:
+            before_cols = set(df.columns)
+            base_n = len(df)
+            sidecar_n = len(sidecar)
+            df = df.merge(sidecar, on="ac_no", how="left")
+            matched = int(df[VERIFIED_NUMERIC_COLS[0]].notna().sum())
+            unmatched = base_n - matched
+            added_cols = [c for c in df.columns if c not in before_cols]
+
+            # Any rows that did not match in the sidecar left NaN/blank in the
+            # merged df -- apply the same fill policy so the feature matrix
+            # downstream is clean.
+            for c in VERIFIED_NUMERIC_COLS:
+                s = pd.to_numeric(df[c], errors="coerce")
+                med = s.median()
+                if pd.isna(med):
+                    med = 0.0
+                df[c] = s.fillna(med)
+            for c in VERIFIED_CATEG_COLS:
+                df[c] = df[c].fillna("UNKNOWN").astype(str)
+
+            print(f"[sidecar] base_rows={base_n}  sidecar_rows={sidecar_n}  "
+                  f"matched={matched}  unmatched={unmatched}")
+            print(f"[sidecar] columns_added ({len(added_cols)}): {added_cols}")
 
     # Sanity / completeness
     if df.isna().any().any():

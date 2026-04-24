@@ -1,0 +1,69 @@
+column,group,missing_cells,total_cells,coverage_pct,default_source
+aiadmk_vote_share_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+bjp_vote_share_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+congress_vote_share_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+dmk_vote_share_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+margin_pct_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+margin_votes_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+ntk_vote_share_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+others_vote_share_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+runner_up_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+runner_up_votes_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+turnout_pct_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+winner_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+winner_votes_2016,2016_results,2,234,99.15,opencity.in TCPD mirror (tn_2016_elections.csv)
+aiadmk_alliance_vote_share_2024,2024_lok_sabha_ac_segment,234,234,0.0,needs_source
+bjp_nda_vote_share_2024,2024_lok_sabha_ac_segment,234,234,0.0,needs_source
+dmk_alliance_vote_share_2024,2024_lok_sabha_ac_segment,234,234,0.0,needs_source
+ntk_vote_share_2024,2024_lok_sabha_ac_segment,234,234,0.0,needs_source
+others_vote_share_2024,2024_lok_sabha_ac_segment,234,234,0.0,needs_source
+winning_alliance_2024,2024_lok_sabha_ac_segment,234,234,0.0,needs_source
+aiadmk_nda_candidate_2026,2026_context,234,234,0.0,needs_source
+alliance_change_flag,2026_context,234,234,0.0,needs_source
+bjp_candidate_2026_if_separate,2026_context,234,234,0.0,needs_source
+contesting_alliance_2026,2026_context,234,234,0.0,needs_source
+dmk_alliance_candidate_2026,2026_context,234,234,0.0,needs_source
+incumbent_candidate,2026_context,234,234,0.0,needs_source
+incumbent_contesting_again,2026_context,234,234,0.0,needs_source
+incumbent_party,2026_context,234,234,0.0,needs_source
+ntk_candidate_2026,2026_context,234,234,0.0,needs_source
+rebel_candidate_flag,2026_context,234,234,0.0,needs_source
+strong_local_candidate_flag,2026_context,234,234,0.0,needs_source
+tvk_candidate_2026,2026_context,234,234,0.0,needs_source
+caste_influence_notes,demographics,234,234,0.0,needs_source
+economic_profile,demographics,234,234,0.0,needs_source
+key_local_issues,demographics,234,234,0.0,needs_source
+literacy_rate,demographics,234,234,0.0,needs_source
+minority_population_pct,demographics,234,234,0.0,needs_source
+sc_population_pct,demographics,234,234,0.0,needs_source
+st_population_pct,demographics,234,234,0.0,needs_source
+urban_rural_type,demographics,234,234,0.0,needs_source
+urbanization_pct,demographics,234,234,0.0,needs_source
+women_voter_strength,demographics,234,234,0.0,needs_source
+youth_voter_strength,demographics,234,234,0.0,needs_source
+confidence_score,trend_and_prediction,234,234,0.0,needs_source
+current_trend_aiadmk_nda,trend_and_prediction,234,234,0.0,needs_source
+current_trend_dmk_alliance,trend_and_prediction,234,234,0.0,needs_source
+current_trend_ntk,trend_and_prediction,234,234,0.0,needs_source
+current_trend_tvk,trend_and_prediction,234,234,0.0,needs_source
+likely_winner_alliance_2026,trend_and_prediction,234,234,0.0,needs_source
+predicted_runner_up_alliance_2026,trend_and_prediction,234,234,0.0,needs_source
+predicted_vote_share_aiadmk_nda,trend_and_prediction,234,234,0.0,needs_source
+predicted_vote_share_dmk_alliance,trend_and_prediction,234,234,0.0,needs_source
+predicted_vote_share_ntk_others,trend_and_prediction,234,234,0.0,needs_source
+predicted_vote_share_tvk,trend_and_prediction,234,234,0.0,needs_source
+prediction_basis_notes,trend_and_prediction,234,234,0.0,needs_source
+tvk_anti_establishment_score,tvk_indicators,234,234,0.0,needs_source
+tvk_estimated_vote_share_range,tvk_indicators,234,234,0.0,needs_source
+tvk_kongu_impact_score,tvk_indicators,234,234,0.0,needs_source
+tvk_notes,tvk_indicators,234,234,0.0,needs_source
+tvk_presence_level,tvk_indicators,234,234,0.0,needs_source
+tvk_seat_win_probability,tvk_indicators,234,234,0.0,needs_source
+tvk_urban_appeal_score,tvk_indicators,234,234,0.0,needs_source
+tvk_vote_split_target,tvk_indicators,234,234,0.0,needs_source
+tvk_youth_appeal_score,tvk_indicators,234,234,0.0,needs_source
+female_voters,voter_aggregates_per_ac,234,234,0.0,needs_source
+first_time_voters,voter_aggregates_per_ac,234,234,0.0,needs_source
+gender_gap,voter_aggregates_per_ac,234,234,0.0,needs_source
+male_voters,voter_aggregates_per_ac,234,234,0.0,needs_source
+total_voters,voter_aggregates_per_ac,234,234,0.0,needs_source

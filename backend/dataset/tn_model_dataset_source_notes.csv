@@ -1,0 +1,10 @@
+group,source,url_or_path,kind
+spine,tamilnadu_assembly_constituency_2026.csv,dataset\tamilnadu_assembly_constituency_2026.csv,verified_official (CEO TN)
+2016_results,opencity.in TCPD mirror (tn_2016_elections.csv),https://data.opencity.in/dataset/b0933494-6a9c-4b91-816a-a97a69f2348c/resource/d17eb781-2e8a-4230-bdce-88e361a803f8/download/tn_2016_elections.csv,"verified_derived (TCPD, ECI-sourced)"
+2021_results,opencity.in TCPD mirror (tn_2021_elections.csv),https://data.opencity.in/dataset/74f05dff-eac3-4e2b-80cd-3382e9c190d5/resource/5ca1808c-4b8a-4fa6-957e-409e690f509d/download/b89dceb3-b295-4d9b-af6d-b71d2a86ee49.csv,"verified_derived (TCPD, ECI-sourced)"
+voter_aggregates_per_ac,needs_source,CEO TN electoral roll AC-wise (not ingested here),missing
+2024_lok_sabha_ac_segment,needs_source,elections.tn.gov.in GELS_2024 Form 20 (polling-station PDFs; needs AC-segment aggregation),missing
+2026_context,needs_source,CEO TN 2026 candidate list (publishes after nominations close),missing
+demographics,needs_source,Census 2011 AC-mapped indicators / SECC (not ingested here),missing
+tvk_indicators,needs_source,Survey / polling data; not set at AC level to avoid fabrication,missing
+trend_and_prediction,needs_source,Model output - populate after training,missing

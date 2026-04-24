@@ -1,2 +1,0 @@
-# Placeholder so `backend/checkpoints/` exists after clone.
-# `python train.py` writes model_fold_*.pt files here (gitignored).

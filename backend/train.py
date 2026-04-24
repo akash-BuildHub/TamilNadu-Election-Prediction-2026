@@ -30,7 +30,12 @@ from sklearn.preprocessing import StandardScaler
 from torch.utils.data import DataLoader, TensorDataset, WeightedRandomSampler
 
 from config import DISTRICTS, PARTIES, REGIONS
-from data_loader import load_training_dataframe
+from data_loader import (
+    VERIFIED_CATEG_COLS,
+    VERIFIED_NUMERIC_COLS,
+    VERIFIED_PARTY_VOCAB,
+    load_training_dataframe,
+)
 
 warnings.filterwarnings("ignore")
 _BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -98,6 +103,15 @@ NUMERIC_FEATURES = [
 
 PERCENT_SCALE_COLS = {
     "men_pct", "women_pct", "third_gender_pct", "reserved_share_pct",
+    # Sidecar (all prefixed "verified_") vote-shares and turnout are 0-100 scale
+    "verified_turnout_pct_2016", "verified_turnout_pct_2021",
+    "verified_margin_pct_2016", "verified_margin_pct_2021",
+    "verified_dmk_vote_share_2016", "verified_aiadmk_vote_share_2016",
+    "verified_bjp_vote_share_2016", "verified_congress_vote_share_2016",
+    "verified_ntk_vote_share_2016", "verified_others_vote_share_2016",
+    "verified_dmk_vote_share_2021", "verified_aiadmk_vote_share_2021",
+    "verified_bjp_vote_share_2021", "verified_congress_vote_share_2021",
+    "verified_ntk_vote_share_2021", "verified_others_vote_share_2021",
 }
 VOTER_COUNT_DIVISOR = 2_000_000.0
 AC_COUNT_DIVISOR = 10.0
@@ -115,6 +129,19 @@ class ElectionDataset:
 
         print("Loading data from backend/data_files/ ...")
         self.df = load_training_dataframe()
+
+        # Detect whether the verified sidecar is actually present on the
+        # merged DataFrame. If yes, we append its features; if no (user set
+        # TN2026_DISABLE_SIDECAR or the CSV was absent), we skip them --
+        # so the same code works in both A/B legs.
+        self._sidecar_present = all(
+            c in self.df.columns for c in VERIFIED_NUMERIC_COLS + VERIFIED_CATEG_COLS
+        )
+        if self._sidecar_present:
+            print("  sidecar: ACTIVE (verified historical features included)")
+        else:
+            print("  sidecar: INACTIVE (baseline feature set only)")
+
         self.features, self.labels, self.vote_shares, self.meta = self._build()
 
         n = len(self.features)
@@ -148,6 +175,21 @@ class ElectionDataset:
             elif col in PERCENT_SCALE_COLS:
                 v /= 100.0
             f.append(v)
+
+        # Sidecar features -- appended AFTER the baseline features so the
+        # baseline feature indices are unchanged.
+        if self._sidecar_present:
+            # Numeric: same percent-scaling as the baseline path.
+            for col in VERIFIED_NUMERIC_COLS:
+                v = float(row[col])
+                if col in PERCENT_SCALE_COLS:
+                    v /= 100.0
+                f.append(v)
+            # Categorical: one-hot against VERIFIED_PARTY_VOCAB.
+            for col in VERIFIED_CATEG_COLS:
+                val = str(row[col])
+                for party in VERIFIED_PARTY_VOCAB:
+                    f.append(1.0 if val == party else 0.0)
 
         return f
 
