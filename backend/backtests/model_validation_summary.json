@@ -1,0 +1,26 @@
+{
+  "train_py_synthetic_cv_accuracy": 0.9104,
+  "train_py_synthetic_cv_std": 0.1037,
+  "party_level_backtest": {
+    "cv_accuracy": 0.6325,
+    "holdout_accuracy": 0.6596,
+    "majority_baseline": 0.5684
+  },
+  "alliance_level_backtest": {
+    "cv_accuracy": 0.7607,
+    "holdout_accuracy": 0.7234,
+    "majority_baseline": 0.6795
+  },
+  "realistic_accuracy_range": {
+    "min": 0.6325,
+    "max": 0.7607,
+    "note": "party-level lower bound, alliance-level upper bound"
+  },
+  "validation_note": "Internal synthetic-label CV accuracy: 91.04%. Historical backtest accuracy: 63.25% party-level and 76.07% alliance-level. Treat constituency-level predictions as directional, not guaranteed.",
+  "confidence_type": "relative_model_confidence_not_true_probability",
+  "sources": {
+    "train_py_cv": "backend/train.py (CV Accuracy line)",
+    "party_backtest": "backend/backtests/backtest_2021_metrics.json",
+    "alliance_backtest": "backend/backtests/backtest_2021_alliance_metrics.json"
+  }
+}

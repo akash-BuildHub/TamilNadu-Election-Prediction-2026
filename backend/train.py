@@ -555,6 +555,13 @@ def main():
     mean_acc = np.mean(fold_accs)
     std_acc = np.std(fold_accs)
     print(f"\n  CV Accuracy: {mean_acc:.4f} +/- {std_acc:.4f}")
+    # Calibration caveat -- see backend/backtests/model_validation_summary.md
+    print("  NOTE: This CV accuracy is measured against the SYNTHETIC label")
+    print("        proj_2026_winner (built from 2021 AC-level history). It is")
+    print("        NOT real-world forecast accuracy. Real-world backtest CV:")
+    print("          party-level   2016->2021: ~0.6325")
+    print("          alliance-level 2016->2021: ~0.7607")
+    print("        See backend/backtests/model_validation_summary.md")
 
     global_scaler = StandardScaler().fit(data.features)
     results = ensemble_predict(data, config, global_scaler)

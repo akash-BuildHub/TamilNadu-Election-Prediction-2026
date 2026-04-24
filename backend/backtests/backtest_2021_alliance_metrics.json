@@ -1,0 +1,177 @@
+{
+  "target": "winner_alliance_2021 (derived from real winner_party_2021)",
+  "n_samples": 234,
+  "n_features": 67,
+  "alliance_classes": [
+    "DMK_ALLIANCE",
+    "AIADMK_ALLIANCE",
+    "OTHERS"
+  ],
+  "class_distribution": {
+    "DMK_ALLIANCE": 159,
+    "AIADMK_ALLIANCE": 75,
+    "OTHERS": 0
+  },
+  "baseline_always_majority_accuracy": 0.6794871794871795,
+  "cv_strategy": "StratifiedKFold(K=5, shuffle=True, seed=42)",
+  "holdout_strategy": "Stratified 80/20 (seed=42)",
+  "models": {
+    "random_forest": {
+      "cv": {
+        "accuracy": 0.7606837606837606,
+        "macro_f1": 0.695906432748538,
+        "weighted_f1": 0.7462887989203779
+      },
+      "holdout": {
+        "accuracy": 0.723404255319149,
+        "macro_f1": 0.6014350945857795,
+        "weighted_f1": 0.6811841612191364,
+        "n_test": 47
+      }
+    },
+    "gradient_boosting": {
+      "cv": {
+        "accuracy": 0.7564102564102564,
+        "macro_f1": 0.7006396588486141,
+        "weighted_f1": 0.7470231261276038
+      },
+      "holdout": {
+        "accuracy": 0.723404255319149,
+        "macro_f1": 0.6457971014492754,
+        "weighted_f1": 0.7057662658032686,
+        "n_test": 47
+      }
+    },
+    "logreg": {
+      "cv": {
+        "accuracy": 0.7136752136752137,
+        "macro_f1": 0.6881055165416674,
+        "weighted_f1": 0.7201630472762627
+      },
+      "holdout": {
+        "accuracy": 0.7021276595744681,
+        "macro_f1": 0.6572916666666666,
+        "weighted_f1": 0.7021276595744681,
+        "n_test": 47
+      }
+    }
+  },
+  "best_model_by_cv_accuracy": "random_forest",
+  "best_model_per_class_metrics": {
+    "AIADMK_ALLIANCE": {
+      "precision": 0.6862745098039216,
+      "recall": 0.4666666666666667,
+      "f1": 0.5555555555555556,
+      "support": 75
+    },
+    "DMK_ALLIANCE": {
+      "precision": 0.7814207650273224,
+      "recall": 0.89937106918239,
+      "f1": 0.8362573099415205,
+      "support": 159
+    }
+  },
+  "top_features": [
+    {
+      "feature": "ntk_vote_share_2016",
+      "importance": 0.09547579575811646,
+      "rank": 1
+    },
+    {
+      "feature": "aiadmk_vote_share_2016",
+      "importance": 0.09129368875703522,
+      "rank": 2
+    },
+    {
+      "feature": "others_vote_share_2016",
+      "importance": 0.08556706390094229,
+      "rank": 3
+    },
+    {
+      "feature": "margin_pct_2016",
+      "importance": 0.08204433545552713,
+      "rank": 4
+    },
+    {
+      "feature": "turnout_pct_2016",
+      "importance": 0.0811301711540436,
+      "rank": 5
+    },
+    {
+      "feature": "dmk_vote_share_2016",
+      "importance": 0.07384514671331814,
+      "rank": 6
+    },
+    {
+      "feature": "region_West",
+      "importance": 0.06778590615192201,
+      "rank": 7
+    },
+    {
+      "feature": "bjp_vote_share_2016",
+      "importance": 0.06369047348364379,
+      "rank": 8
+    },
+    {
+      "feature": "district_Coimbatore",
+      "importance": 0.033291847155345194,
+      "rank": 9
+    },
+    {
+      "feature": "district_Salem",
+      "importance": 0.023345980500650947,
+      "rank": 10
+    },
+    {
+      "feature": "congress_vote_share_2016",
+      "importance": 0.020355140451510077,
+      "rank": 11
+    },
+    {
+      "feature": "region_Chennai_Metro",
+      "importance": 0.01951564942121694,
+      "rank": 12
+    },
+    {
+      "feature": "region_Central",
+      "importance": 0.018179699378395007,
+      "rank": 13
+    },
+    {
+      "feature": "runner_up_party_2016_DMK",
+      "importance": 0.017808524202894305,
+      "rank": 14
+    },
+    {
+      "feature": "district_Dharmapuri",
+      "importance": 0.014031789172764937,
+      "rank": 15
+    },
+    {
+      "feature": "winner_party_2016_AIADMK",
+      "importance": 0.012883052363294829,
+      "rank": 16
+    },
+    {
+      "feature": "reservation_GEN",
+      "importance": 0.01250675223035304,
+      "rank": 17
+    },
+    {
+      "feature": "region_North",
+      "importance": 0.011569366687767028,
+      "rank": 18
+    },
+    {
+      "feature": "runner_up_party_2016_AIADMK",
+      "importance": 0.011122573691852496,
+      "rank": 19
+    },
+    {
+      "feature": "reservation_SC",
+      "importance": 0.010681967035149611,
+      "rank": 20
+    }
+  ],
+  "n_misclassified_cv": 56
+}

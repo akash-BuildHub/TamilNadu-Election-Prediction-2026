@@ -13,6 +13,10 @@ PREDICTIONS_FILE = ROOT / "predictions_2026.csv"
 # back to the projection-layer CSV (the model's training target). This is
 # for bootstrap only; see ALLOW_ASSEMBLY_FALLBACK below.
 ASSEMBLY_FALLBACK_FILE = ROOT / "data_files" / "tamilnadu_assembly_2026.csv"
+# Validation summary produced by write_model_validation.py. Surfaces in the
+# /api/health and /api/predictions/meta payloads so consumers know the
+# confidence field is relative model confidence, not a calibrated probability.
+VALIDATION_SUMMARY_FILE = ROOT / "backtests" / "model_validation_summary.json"
 PARTIES = ("DMK_ALLIANCE", "AIADMK_NDA", "TVK", "NTK", "OTHERS")
 NO_STORE_CACHE_HEADER = "no-store, no-cache, must-revalidate, max-age=0"
 CORS_ALLOWED_HEADERS = "Content-Type, Cache-Control, Pragma"
@@ -133,11 +137,31 @@ def _seat_counts(rows):
     return counts
 
 
+def _load_validation_summary():
+    """
+    Return the validation summary dict written by write_model_validation.py.
+    Degrades to a minimal stub if the file is missing so the server still
+    starts (but consumers still see the disclaimer wording).
+    """
+    try:
+        with VALIDATION_SUMMARY_FILE.open("r", encoding="utf-8") as fp:
+            return json.load(fp)
+    except FileNotFoundError:
+        return {
+            "validation_note": (
+                "Model validation summary not generated. "
+                "Run: python backend/write_model_validation.py"
+            ),
+            "confidence_type": "relative_model_confidence_not_true_probability",
+        }
+
+
 def _build_predictions_meta(rows, source_file: Path, fallback_in_use: bool):
     counts = _seat_counts(rows)
     projected_winner = "-"
     if rows:
         projected_winner = max(PARTIES, key=lambda party: counts[party])
+    validation = _load_validation_summary()
     return {
         "api_version": API_VERSION,
         "state": "Tamil Nadu",
@@ -152,6 +176,18 @@ def _build_predictions_meta(rows, source_file: Path, fallback_in_use: bool):
         "seat_counts": counts,
         "projected_winner": projected_winner,
         "majority_threshold": 118,
+        # Honest-interpretation disclaimer. Any frontend that wants to display
+        # "accuracy" or "confidence" semantics should read these two fields.
+        "confidence_type": validation.get("confidence_type"),
+        "validation_note": validation.get("validation_note"),
+        "validation": {
+            "train_py_synthetic_cv_accuracy":
+                validation.get("train_py_synthetic_cv_accuracy"),
+            "party_level_backtest_cv_accuracy":
+                (validation.get("party_level_backtest") or {}).get("cv_accuracy"),
+            "alliance_level_backtest_cv_accuracy":
+                (validation.get("alliance_level_backtest") or {}).get("cv_accuracy"),
+        },
     }
 
 

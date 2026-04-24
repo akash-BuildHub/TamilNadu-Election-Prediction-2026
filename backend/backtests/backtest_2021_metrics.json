@@ -1,0 +1,181 @@
+{
+  "n_samples": 234,
+  "n_features": 67,
+  "n_classes": 8,
+  "class_distribution": {
+    "DMK": 133,
+    "AIADMK": 66,
+    "INC": 18,
+    "PMK": 5,
+    "VCK": 4,
+    "BJP": 4,
+    "CPI": 2,
+    "CPI(M)": 2
+  },
+  "cv": {
+    "strategy": "StratifiedKFold(K=2, shuffle=True, seed=42)",
+    "accuracy": 0.6324786324786325,
+    "macro_f1": 0.21255961505706011,
+    "weighted_f1": 0.590179602187778
+  },
+  "holdout": {
+    "strategy": "Stratified 80/20 holdout (seed=42)",
+    "accuracy": 0.6595744680851063,
+    "macro_f1": 0.30518159806295403,
+    "weighted_f1": 0.6292885477306682,
+    "n_test": 47
+  },
+  "per_class_metrics": {
+    "AIADMK": {
+      "precision": 0.5416666666666666,
+      "recall": 0.3939393939393939,
+      "f1": 0.45614035087719296,
+      "support": 66
+    },
+    "BJP": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 4
+    },
+    "CPI": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 2
+    },
+    "CPI(M)": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 2
+    },
+    "DMK": {
+      "precision": 0.6534090909090909,
+      "recall": 0.8646616541353384,
+      "f1": 0.7443365695792881,
+      "support": 133
+    },
+    "INC": {
+      "precision": 0.7,
+      "recall": 0.3888888888888889,
+      "f1": 0.5,
+      "support": 18
+    },
+    "PMK": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 5
+    },
+    "VCK": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 4
+    }
+  },
+  "top_features": [
+    {
+      "feature": "aiadmk_vote_share_2016",
+      "importance": 0.0926291431459965,
+      "rank": 1
+    },
+    {
+      "feature": "dmk_vote_share_2016",
+      "importance": 0.08575558902182866,
+      "rank": 2
+    },
+    {
+      "feature": "margin_pct_2016",
+      "importance": 0.08379379455780832,
+      "rank": 3
+    },
+    {
+      "feature": "ntk_vote_share_2016",
+      "importance": 0.083347419579567,
+      "rank": 4
+    },
+    {
+      "feature": "others_vote_share_2016",
+      "importance": 0.07757867200111465,
+      "rank": 5
+    },
+    {
+      "feature": "turnout_pct_2016",
+      "importance": 0.07583311312027495,
+      "rank": 6
+    },
+    {
+      "feature": "bjp_vote_share_2016",
+      "importance": 0.06651554870198371,
+      "rank": 7
+    },
+    {
+      "feature": "region_West",
+      "importance": 0.041488854449432656,
+      "rank": 8
+    },
+    {
+      "feature": "congress_vote_share_2016",
+      "importance": 0.03923197011287852,
+      "rank": 9
+    },
+    {
+      "feature": "district_Coimbatore",
+      "importance": 0.019984696943330934,
+      "rank": 10
+    },
+    {
+      "feature": "reservation_GEN",
+      "importance": 0.01600399315975668,
+      "rank": 11
+    },
+    {
+      "feature": "region_Chennai_Metro",
+      "importance": 0.01540477970464753,
+      "rank": 12
+    },
+    {
+      "feature": "region_Central",
+      "importance": 0.01490279782304214,
+      "rank": 13
+    },
+    {
+      "feature": "winner_party_2016_DMK",
+      "importance": 0.014855205870430098,
+      "rank": 14
+    },
+    {
+      "feature": "reservation_SC",
+      "importance": 0.014683345301995674,
+      "rank": 15
+    },
+    {
+      "feature": "runner_up_party_2016_DMK",
+      "importance": 0.014230322188848045,
+      "rank": 16
+    },
+    {
+      "feature": "runner_up_party_2016_AIADMK",
+      "importance": 0.014161583573144029,
+      "rank": 17
+    },
+    {
+      "feature": "district_Salem",
+      "importance": 0.013333409395844488,
+      "rank": 18
+    },
+    {
+      "feature": "winner_party_2016_AIADMK",
+      "importance": 0.013236258548809516,
+      "rank": 19
+    },
+    {
+      "feature": "region_South",
+      "importance": 0.010968042972489732,
+      "rank": 20
+    }
+  ],
+  "n_misclassified": 86
+}
