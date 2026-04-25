@@ -146,11 +146,13 @@ REQUIRED_FILES: Dict[Path, List[str]] = {
         "tamilnadu_lok_sabha_2014.csv",
         "tamilnadu_lok_sabha_2019.csv",
         "tamilnadu_lok_sabha_2024.csv",
+        "tamilnadu_long_term_trend_dataset.csv",
     ],
     RECENT_SWING: [
         "tamilnadu_assembly_2021.csv",
         "tamilnadu_assembly_2026_prediction_base.csv",
         "tamilnadu_lok_sabha_2024.csv",
+        "tamilnadu_recent_swing_dataset.csv",
     ],
     LIVE_INTEL: [
         "party_sentiment_2026.csv",
@@ -160,6 +162,7 @@ REQUIRED_FILES: Dict[Path, List[str]] = {
         "news_sentiment_2026.csv",
         "local_issue_score_2026.csv",
         "tvk_impact_2026.csv",
+        "tamilnadu_live_intelligence_dataset.csv",
     ],
     FINAL_ML: [
         "tamilnadu_2026_default_prediction.csv",
@@ -208,7 +211,10 @@ def check_per_ac_row_counts() -> None:
         DATA_FILES / "tamilnadu_assembly_2026.csv",
         DATA_FILES / "tamilnadu_constituency_master_2026.csv",
         LONG_TERM / "tamilnadu_assembly_2026_prediction_base.csv",
+        LONG_TERM / "tamilnadu_long_term_trend_dataset.csv",
         RECENT_SWING / "tamilnadu_assembly_2026_prediction_base.csv",
+        RECENT_SWING / "tamilnadu_recent_swing_dataset.csv",
+        LIVE_INTEL / "tamilnadu_live_intelligence_dataset.csv",
         FINAL_ML / "tamilnadu_2026_default_prediction.csv",
         FINAL_ML / "tamilnadu_2026_long_term_trend_sheet.csv",
         FINAL_ML / "tamilnadu_2026_recent_swing_sheet.csv",
@@ -534,6 +540,94 @@ def check_live_intel_ranges() -> None:
 # 9. Live API parity check
 # ---------------------------------------------------------------------------
 
+def check_new_per_ac_datasets() -> None:
+    """
+    Validate the three user-supplied per-AC datasets:
+        long_term_trend/tamilnadu_long_term_trend_dataset.csv
+        recent_swing/tamilnadu_recent_swing_dataset.csv
+        live_intelligence_score/tamilnadu_live_intelligence_dataset.csv
+
+    Each must have ac_no = 1..234 and an ac_name matching the
+    constituency master.
+    """
+    master_path = DATA_FILES / "tamilnadu_constituency_master_2026.csv"
+    if not master_path.exists():
+        report.warn("Constituency master missing -- skipping per-AC name parity")
+        return
+    master = read_csv(master_path)
+    master_by_ac = {
+        to_int(r.get("ac_no", 0)): (r.get("ac_name") or "").strip()
+        for r in master
+    }
+
+    paths = [
+        LONG_TERM / "tamilnadu_long_term_trend_dataset.csv",
+        RECENT_SWING / "tamilnadu_recent_swing_dataset.csv",
+        LIVE_INTEL / "tamilnadu_live_intelligence_dataset.csv",
+    ]
+
+    for path in paths:
+        if not path.exists():
+            report.fail(f"{path.relative_to(ROOT)}: missing")
+            continue
+        rows = read_csv(path)
+        if len(rows) != EXPECTED_AC_COUNT:
+            report.fail(
+                f"{path.name}: {len(rows)} rows (expected {EXPECTED_AC_COUNT})"
+            )
+            continue
+
+        # ac_no should be 1..234, contiguous
+        ac_nos = sorted(to_int(r.get("ac_no", 0)) for r in rows)
+        expected = list(range(1, EXPECTED_AC_COUNT + 1))
+        if ac_nos == expected:
+            report.ok(f"{path.name}: ac_no = 1..{EXPECTED_AC_COUNT} contiguous")
+        else:
+            missing = sorted(set(expected) - set(ac_nos))
+            extras = sorted(set(ac_nos) - set(expected))
+            report.fail(
+                f"{path.name}: ac_no out of range "
+                f"(missing={missing[:5]}, extra={extras[:5]})"
+            )
+
+        # ac_name parity with master (case-insensitive comparison since the
+        # user-supplied datasets and master may differ in capitalisation).
+        mismatches = []
+        for r in rows:
+            ac = to_int(r.get("ac_no", 0))
+            user_name = (r.get("ac_name") or "").strip()
+            master_name = master_by_ac.get(ac, "")
+            if user_name.lower() != master_name.lower():
+                mismatches.append((ac, user_name, master_name))
+        if not mismatches:
+            report.ok(f"{path.name}: ac_name matches constituency master")
+        else:
+            report.warn(
+                f"{path.name}: {len(mismatches)} ac_name mismatch(es) "
+                f"(first: ac={mismatches[0][0]} '{mismatches[0][1]}' vs '{mismatches[0][2]}')"
+            )
+
+        # Count populated vs needs_source per row to flag the data-completeness
+        # status (these are user-curated datasets with placeholders).
+        non_blank_cells = 0
+        needs_source_cells = 0
+        for r in rows:
+            for k, v in r.items():
+                if k in ("ac_no", "ac_name", "district", "region", "reservation"):
+                    continue
+                vv = (v or "").strip().lower()
+                if vv == "" or vv == "needs_source":
+                    needs_source_cells += 1
+                else:
+                    non_blank_cells += 1
+        total_cells = non_blank_cells + needs_source_cells
+        pct = (non_blank_cells / total_cells * 100) if total_cells else 0.0
+        report.ok(
+            f"{path.name}: {non_blank_cells}/{total_cells} non-placeholder "
+            f"cells ({pct:.1f}% populated)"
+        )
+
+
 def check_analysis_api_parity() -> None:
     try:
         from analysis import run_analysis  # type: ignore
@@ -578,6 +672,7 @@ def main() -> int:
     emit("predictions_2026.csv shape & invariants", check_predictions_shape)
     emit("Final ML-ready sheet agreement", check_final_sheets)
     emit("Live intelligence value ranges", check_live_intel_ranges)
+    emit("New per-AC datasets (long-term / recent-swing / live-intel)", check_new_per_ac_datasets)
     emit("Live analysis API parity", check_analysis_api_parity)
 
     print(f"\nSummary: {total_pass} OK, {total_warn} warning(s), {total_fail} failure(s)")

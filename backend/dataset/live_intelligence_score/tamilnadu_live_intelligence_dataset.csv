@@ -1,0 +1,235 @@
+ac_no,ac_name,district,region,reservation,urban_rural_type,sc_population_pct,st_population_pct,minority_population_pct,youth_voter_strength,women_voter_strength,caste_influence_notes,economic_profile,key_local_issues,tvk_presence_level,tvk_youth_appeal_score,tvk_urban_appeal_score,tvk_kongu_impact_score,tvk_anti_establishment_score,tvk_vote_split_target,tvk_estimated_vote_share_range,tvk_seat_win_probability,tvk_notes,current_trend_dmk_alliance,current_trend_aiadmk_nda
+1,Gummidipoondi,Tiruvallur,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+2,Ponneri,Tiruvallur,Chennai_Metro,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+3,Tiruttani,Tiruvallur,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+4,Thiruvallur,Tiruvallur,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+5,Poonamallee,Tiruvallur,Chennai_Metro,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+6,Avadi,Tiruvallur,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+7,Maduravoyal,Tiruvallur,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+8,Ambattur,Tiruvallur,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+9,Madavaram,Tiruvallur,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+10,Thiruvottiyur,Tiruvallur,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+11,Dr. Radhakrishnan Nagar,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+12,Perambur,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+13,Kolathur,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+14,Villivakkam,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+15,Thiru-Vi-Ka-Nagar,Chennai,Chennai_Metro,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+16,Egmore,Chennai,Chennai_Metro,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+17,Royapuram,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+18,Harbour,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+19,Chepauk-Thiruvallikeni,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+20,Thousand Lights,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+21,Anna Nagar,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+22,Virugampakkam,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+23,Saidapet,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+24,Thiyagarayanagar,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+25,Mylapore,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+26,Velachery,Chennai,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+27,Sholinganallur,Chengalpattu,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+28,Alandur,Kancheepuram,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+29,Sriperumbudur,Kancheepuram,Chennai_Metro,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+30,Pallavaram,Chengalpattu,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+31,Tambaram,Chengalpattu,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+32,Chengalpattu,Chengalpattu,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+33,Thiruporur,Chengalpattu,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+34,Cheyyur,Chengalpattu,Chennai_Metro,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+35,Madurantakam,Chengalpattu,Chennai_Metro,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+36,Uthiramerur,Kancheepuram,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+37,Kancheepuram,Kancheepuram,Chennai_Metro,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+38,Arakkonam,Ranipet,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+39,Sholingur,Ranipet,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+40,Katpadi,Vellore,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+41,Ranipet,Ranipet,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+42,Arcot,Ranipet,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+43,Vellore,Vellore,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+44,Anaikattu,Vellore,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+45,Kilvaithinankuppam,Vellore,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+46,Gudiyattam,Vellore,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+47,Vaniyambadi,Tirupattur,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+48,Ambur,Tirupattur,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+49,Jolarpet,Tirupattur,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+50,Tirupattur,Tirupattur,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+51,Uthangarai,Krishnagiri,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+52,Bargur,Krishnagiri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+53,Krishnagiri,Krishnagiri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+54,Veppanahalli,Krishnagiri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+55,Hosur,Krishnagiri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+56,Thalli,Krishnagiri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+57,Palacode,Dharmapuri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+58,Pennagaram,Dharmapuri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+59,Dharmapuri,Dharmapuri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+60,Pappireddippatti,Dharmapuri,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+61,Harur,Dharmapuri,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+62,Chengam,Tiruvannamalai,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+63,Tiruvannamalai,Tiruvannamalai,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+64,Kilpennathur,Tiruvannamalai,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+65,Kalasapakkam,Tiruvannamalai,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+66,Polur,Tiruvannamalai,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+67,Arani,Tiruvannamalai,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+68,Cheyyar,Tiruvannamalai,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+69,Vandavasi,Tiruvannamalai,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+70,Gingee,Viluppuram,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+71,Mailam,Viluppuram,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+72,Tindivanam,Viluppuram,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+73,Vanur,Viluppuram,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+74,Viluppuram,Viluppuram,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+75,Vikravandi,Viluppuram,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+76,Tirukkoyilur,Viluppuram,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+77,Ulundurpettai,Kallakurichi,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+78,Rishivandiyam,Kallakurichi,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+79,Sankarapuram,Kallakurichi,North,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+80,Kallakurichi,Kallakurichi,North,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+81,Gangavalli,Salem,West,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+82,Attur,Salem,West,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+83,Yercaud,Salem,West,ST,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+84,Omalur,Salem,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+85,Mettur,Salem,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+86,Edappadi,Salem,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+87,Sankari,Salem,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+88,Salem West,Salem,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+89,Salem North,Salem,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+90,Salem South,Salem,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+91,Veerapandi,Salem,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+92,Rasipuram,Namakkal,West,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+93,Senthamangalam,Namakkal,West,ST,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+94,Namakkal,Namakkal,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+95,Paramathi-Velur,Namakkal,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+96,Tiruchengodu,Namakkal,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+97,Kumarapalayam,Namakkal,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+98,Erode East,Erode,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+99,Erode West,Erode,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+100,Modakkurichi,Erode,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+101,Dharapuram,Tiruppur,West,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+102,Kangayam,Tiruppur,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+103,Perundurai,Erode,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+104,Bhavani,Erode,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+105,Anthiyur,Erode,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+106,Gobichettipalayam,Erode,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+107,Bhavanisagar,Erode,West,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+108,Udhagamandalam,The Nilgiris,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+109,Gudalur,The Nilgiris,West,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+110,Coonoor,The Nilgiris,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+111,Mettuppalayam,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+112,Avanashi,Tiruppur,West,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+113,Tiruppur North,Tiruppur,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+114,Tiruppur South,Tiruppur,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+115,Palladam,Tiruppur,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+116,Sulur,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+117,Kavundampalayam,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+118,Coimbatore North,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+119,Thondamuthur,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+120,Coimbatore South,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+121,Singanallur,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+122,Kinathukadavu,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+123,Pollachi,Coimbatore,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+124,Valparai,Coimbatore,West,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+125,Udumalaipettai,Tiruppur,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+126,Madathukulam,Tiruppur,West,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+127,Palani,Dindigul,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+128,Oddanchatram,Dindigul,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+129,Athoor,Dindigul,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+130,Nilakkottai,Dindigul,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+131,Natham,Dindigul,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+132,Dindigul,Dindigul,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+133,Vedasandur,Dindigul,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+134,Aravakurichi,Karur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+135,Karur,Karur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+136,Krishnarayapuram,Karur,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+137,Kulithalai,Karur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+138,Manapparai,Tiruchirappalli,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+139,Srirangam,Tiruchirappalli,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+140,Tiruchirappalli West,Tiruchirappalli,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+141,Tiruchirappalli East,Tiruchirappalli,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+142,Thiruverumbur,Tiruchirappalli,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+143,Lalgudi,Tiruchirappalli,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+144,Manachanallur,Tiruchirappalli,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+145,Musiri,Tiruchirappalli,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+146,Thuraiyur,Tiruchirappalli,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+147,Perambalur,Perambalur,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+148,Kunnam,Perambalur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+149,Ariyalur,Ariyalur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+150,Jayankondam,Ariyalur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+151,Tittakudi,Cuddalore,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+152,Vriddhachalam,Cuddalore,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+153,Neyveli,Cuddalore,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+154,Panruti,Cuddalore,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+155,Cuddalore,Cuddalore,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+156,Kurinjipadi,Cuddalore,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+157,Bhuvanagiri,Cuddalore,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+158,Chidambaram,Cuddalore,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+159,Kattumannarkoil,Cuddalore,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+160,Sirkazhi,Mayiladuthurai,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+161,Mayiladuthurai,Mayiladuthurai,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+162,Poompuhar,Mayiladuthurai,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+163,Nagapattinam,Nagapattinam,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+164,Kilvelur,Nagapattinam,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+165,Vedaranyam,Nagapattinam,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+166,Thiruthuraipoondi,Thiruvarur,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+167,Mannargudi,Thiruvarur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+168,Thiruvarur,Thiruvarur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+169,Nannilam,Thiruvarur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+170,Thiruvidaimarudur,Thanjavur,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+171,Kumbakonam,Thanjavur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+172,Papanasam,Thanjavur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+173,Thiruvaiyaru,Thanjavur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+174,Thanjavur,Thanjavur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+175,Orathanadu,Thanjavur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+176,Pattukkottai,Thanjavur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+177,Peravurani,Thanjavur,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+178,Gandharvakottai,Pudukkottai,Central,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+179,Viralimalai,Pudukkottai,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+180,Pudukkottai,Pudukkottai,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+181,Thirumayam,Pudukkottai,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+182,Alangudi,Pudukkottai,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+183,Aranthangi,Pudukkottai,Central,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+184,Karaikudi,Sivaganga,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+185,Tiruppattur,Sivaganga,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+186,Sivaganga,Sivaganga,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+187,Manamadurai,Sivaganga,South,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+188,Melur,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+189,Madurai East,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+190,Sholavandan,Madurai,South,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+191,Madurai North,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+192,Madurai South,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+193,Madurai Central,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+194,Madurai West,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+195,Thiruparankundram,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+196,Thirumangalam,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+197,Usilampatti,Madurai,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+198,Andipatti,Theni,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+199,Periyakulam,Theni,South,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+200,Bodinayakanur,Theni,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+201,Cumbum,Theni,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+202,Rajapalayam,Virudhunagar,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+203,Srivilliputhur,Virudhunagar,South,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+204,Sattur,Virudhunagar,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+205,Sivakasi,Virudhunagar,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+206,Virudhunagar,Virudhunagar,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+207,Aruppukkottai,Virudhunagar,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+208,Tiruchuli,Virudhunagar,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+209,Paramakudi,Ramanathapuram,South,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+210,Tiruvadanai,Ramanathapuram,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+211,Ramanathapuram,Ramanathapuram,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+212,Mudhukulathur,Ramanathapuram,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+213,Vilathikulam,Thoothukudi,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+214,Thoothukkudi,Thoothukudi,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+215,Tiruchendur,Thoothukudi,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+216,Srivaikuntam,Thoothukudi,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+217,Ottapidaram,Thoothukudi,South,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+218,Kovilpatti,Thoothukudi,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+219,Sankarankovil,Tenkasi,South,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+220,Vasudevanallur,Tenkasi,South,SC,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+221,Kadayanallur,Tenkasi,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+222,Tenkasi,Tenkasi,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+223,Alangulam,Tenkasi,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+224,Tirunelveli,Tirunelveli,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+225,Ambasamudram,Tirunelveli,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+226,Palayamkottai,Tirunelveli,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+227,Nanguneri,Tirunelveli,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+228,Radhapuram,Tirunelveli,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+229,Kanniyakumari,Kanniyakumari,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+230,Nagercoil,Kanniyakumari,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+231,Colachal,Kanniyakumari,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+232,Padmanabhapuram,Kanniyakumari,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+233,Vilavancode,Kanniyakumari,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
+234,Killiyoor,Kanniyakumari,South,GEN,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,,,,,,needs_source,needs_source,needs_source,needs_source,needs_source
