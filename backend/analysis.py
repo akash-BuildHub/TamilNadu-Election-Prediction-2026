@@ -128,6 +128,17 @@ def _alliance_seat_table(rows: List[dict]) -> Dict[str, int]:
     return out
 
 
+def _pick_winner(scores: Dict[str, float]) -> str:
+    """Argmax over the per-party score dict, deterministic tie-break by PARTIES order."""
+    best_party = PARTIES[0]
+    best_score = scores.get(best_party, 0.0)
+    for p in PARTIES[1:]:
+        if scores.get(p, 0.0) > best_score:
+            best_score = scores[p]
+            best_party = p
+    return best_party
+
+
 # ---------------------------------------------------------------------------
 # Prediction-base loading
 # ---------------------------------------------------------------------------
@@ -179,6 +190,26 @@ def _load_assembly_2016_per_ac() -> Dict[int, dict]:
         if not ac_no:
             continue
         out[ac_no] = r
+    return out
+
+
+def _load_vote_shares_per_ac() -> Dict[int, Dict[str, float]]:
+    """
+    Per-AC underlying vote shares (vs_*) from predictions_2026.csv. These
+    are the model's vote-share estimates (typically DMK ~40%, AIADMK ~39%,
+    TVK ~11%) -- much less polarized than the softmax winner probability,
+    so they're used for the live-mode per-row calculation where modest
+    sentiment shifts need room to flip a seat.
+    """
+    path = Path(DATASET_DIR) / "predictions" / "predictions_2026.csv"
+    out: Dict[int, Dict[str, float]] = {}
+    for r in _read_csv(path):
+        ac_no = _to_int(r.get("ac_no", 0))
+        if not ac_no:
+            continue
+        out[ac_no] = {
+            p: _to_float(r.get(f"vs_{p}", 0.0)) for p in PARTIES
+        }
     return out
 
 
@@ -250,8 +281,26 @@ def compute_long_term_trend() -> Tuple[List[dict], dict]:
             4,
         )
 
+        # Per-row long-term winner: weighted between current model shares,
+        # per-party long-term strength, and a per-AC historical bonus for
+        # parties that won this seat in 2016 or 2021.
+        per_row_long_score: Dict[str, float] = {}
+        for p in PARTIES:
+            historical_bonus = 0.0
+            if prev_2016 == p:
+                historical_bonus += 0.45
+            if prev_2021 == p:
+                historical_bonus += 0.65
+            per_row_long_score[p] = (
+                0.40 * r.shares.get(p, 0.0)
+                + 0.30 * long_term_party_score.get(p, 0.0)
+                + 0.30 * historical_bonus
+            )
+        analysis_predicted = _pick_winner(per_row_long_score)
+
         rows.append({
             **_base_row_to_dict(r),
+            "analysis_predicted": analysis_predicted,
             "long_term_trend_score": long_term_trend_score,
             "historical_strength": historical_strength,
             "winner_2016": prev_2016,
@@ -353,8 +402,24 @@ def compute_recent_swing() -> Tuple[List[dict], dict]:
             4,
         )
 
+        # Per-row recent-swing winner: weighted between current model
+        # shares, per-party momentum (2021 -> 2026 + 2024 LS), and a
+        # 2021-incumbent anchor. Negative momentum erodes the incumbent.
+        per_row_swing_score: Dict[str, float] = {}
+        for p in PARTIES:
+            incumbency_bonus = 0.55 if winner_2021 == p else 0.0
+            momentum = party_recent_momentum.get(p, 0.0)
+            per_row_swing_score[p] = (
+                0.35 * r.shares.get(p, 0.0)
+                + 0.30 * recent_swing_party_score.get(p, 0.0)
+                + 0.25 * incumbency_bonus
+                + 0.10 * momentum
+            )
+        analysis_predicted = _pick_winner(per_row_swing_score)
+
         rows.append({
             **_base_row_to_dict(r),
+            "analysis_predicted": analysis_predicted,
             "recent_swing_score": recent_swing_score,
             "winner_2021": winner_2021,
             "runner_up_2021": runner_up_2021,
@@ -440,14 +505,18 @@ def compute_live_intelligence_score() -> Tuple[List[dict], dict]:
 
     party_live_score: Dict[str, float] = {}
     for p in PARTIES:
+        # Live mode weights "current momentum" signals (leader buzz, social
+        # virality, TVK impact) much heavier than slow-moving party-brand /
+        # candidate / news / issue signals. Encodes that "live now"
+        # sentiment != entrenched party loyalty.
         score = (
-            0.20 * party_sent.get(p, 0.0)
-            + 0.15 * leader_sent.get(p, 0.0)
-            + 0.15 * candidate_sent.get(p, 0.0)
-            + 0.15 * social_sent.get(p, 0.0)
-            + 0.15 * news_sent.get(p, 0.0)
-            + 0.15 * local_issue_party_score.get(p, 0.0)
-            + (0.05 * tvk_impact_score if p == "TVK" else 0.0)
+            0.10 * party_sent.get(p, 0.0)
+            + 0.30 * leader_sent.get(p, 0.0)
+            + 0.10 * candidate_sent.get(p, 0.0)
+            + 0.30 * social_sent.get(p, 0.0)
+            + 0.10 * news_sent.get(p, 0.0)
+            + 0.05 * local_issue_party_score.get(p, 0.0)
+            + (0.10 * tvk_impact_score if p == "TVK" else 0.0)
         )
         party_live_score[p] = round(min(1.0, max(0.0, score)), 4)
 
@@ -463,13 +532,36 @@ def compute_live_intelligence_score() -> Tuple[List[dict], dict]:
             return "Low-Medium"
         return "Low"
 
+    # Underlying vote shares (vs_*) -- realistic 0.40/0.39/0.11 splits
+    # rather than the polarized softmax winner probabilities. Live mode
+    # blends these with sentiment so TVK's leader/social momentum can
+    # flip competitive seats without wiping out AIADMK strongholds.
+    vote_shares = _load_vote_shares_per_ac()
+
     rows: List[dict] = []
     for r in base:
         live = party_live_score.get(r.predicted, 0.0)
         # Sentiment-adjusted prediction: blend model confidence with live score.
         adjusted = round(0.7 * r.confidence + 0.3 * live, 4)
+
+        # Per-row live-intelligence winner. Uses the realistic vote-share
+        # vector (vs_*) instead of the model's polarized winner-probability
+        # so the sentiment + TVK-impact signals have room to shift outcomes
+        # in competitive seats.
+        vs = vote_shares.get(r.ac_no, r.shares)
+        per_row_live_score: Dict[str, float] = {}
+        for p in PARTIES:
+            tvk_boost = tvk_impact_score * 0.18 if p == "TVK" else 0.0
+            per_row_live_score[p] = (
+                0.50 * vs.get(p, 0.0)
+                + 0.35 * party_live_score.get(p, 0.0)
+                + tvk_boost
+            )
+        analysis_predicted = _pick_winner(per_row_live_score)
+
         rows.append({
             **_base_row_to_dict(r),
+            "analysis_predicted": analysis_predicted,
             "live_intelligence_score": live,
             "sentiment_adjusted_prediction": adjusted,
             "confidence_level": _confidence_band(live),
@@ -608,6 +700,7 @@ def run_analysis(analysis_type: str) -> Tuple[List[dict], dict]:
     }[analysis_type]
 
     party_win_counts: Dict[str, int] = {p: 0 for p in PARTIES}
+    analysis_seat_counts: Dict[str, int] = {p: 0 for p in PARTIES}
     party_score_sum: Dict[str, float] = {p: 0.0 for p in PARTIES}
     party_score_count: Dict[str, int] = {p: 0 for p in PARTIES}
     confidence_buckets: Dict[str, int] = {"High": 0, "Medium-High": 0, "Medium": 0, "Low-Medium": 0, "Low": 0}
@@ -640,6 +733,10 @@ def run_analysis(analysis_type: str) -> Tuple[List[dict], dict]:
             party_score_sum[predicted] += score
             party_score_count[predicted] += 1
 
+        analysis_predicted = row.get("analysis_predicted", predicted)
+        if analysis_predicted in analysis_seat_counts:
+            analysis_seat_counts[analysis_predicted] += 1
+
         enriched.append(enriched_row)
 
     party_avg_score = {
@@ -653,6 +750,7 @@ def run_analysis(analysis_type: str) -> Tuple[List[dict], dict]:
         **build_analysis_context(analysis_type),
         "weights": FINAL_SCORE_WEIGHTS,
         "party_seat_counts": party_win_counts,
+        "analysis_seat_counts": analysis_seat_counts,
         "party_average_score": party_avg_score,
         "party_state_share_2026": _round_dict(state_share, 2),
         "confidence_buckets": confidence_buckets,

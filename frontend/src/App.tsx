@@ -557,7 +557,9 @@ export function App() {
                 transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
               >
                 <h2 className="explorer-title">Constituency Explorer</h2>
-                <span className="table-meta">High Score Seats: {highMarginSeats}</span>
+                <div className="table-head-actions">
+                  <span className="table-meta">High Score Seats: {highMarginSeats}</span>
+                </div>
               </motion.div>
               <motion.div
                 className="table-wrap"

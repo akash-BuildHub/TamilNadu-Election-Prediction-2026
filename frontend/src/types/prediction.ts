@@ -77,6 +77,7 @@ export const ANALYSIS_LABELS: Record<AnalysisType, string> = {
 // analysis-specific fields are optional so the same type covers all
 // three analysis_type values plus the bare default response.
 export type AnalysisPredictionRow = PredictionRow & {
+  analysis_predicted?: Party;
   final_prediction_score?: number;
   win_probability?: number;
   confidence_level?: string;
@@ -116,6 +117,7 @@ export type AnalysisMeta = {
   prediction_mode: boolean;
   weights: Record<AnalysisType, number>;
   party_seat_counts: SeatCounts;
+  analysis_seat_counts: SeatCounts;
   party_average_score: SeatCounts;
   party_state_share_2026: SeatCounts;
   confidence_buckets: Record<string, number>;

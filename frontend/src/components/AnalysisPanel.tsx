@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { fetchAnalysisPredictions } from "../services/api";
 import {
   AnalysisMeta,
@@ -12,6 +12,14 @@ import {
 } from "../types/prediction";
 import { asPercentSmart, asSeatPercent } from "../utils/format";
 import { PartyBadge } from "./PartyBadge";
+
+const DISPLAY_PARTIES: Party[] = [
+  "DMK_ALLIANCE",
+  "AIADMK_NDA",
+  "TVK",
+  "NTK",
+  "OTHERS",
+];
 
 type AnalysisPanelProps = {
   analysisType: AnalysisType;
@@ -33,65 +41,392 @@ function fmtPct(value: unknown): string {
   return asPercentSmart(value);
 }
 
-function PartyScoreBars({
-  scores,
-  totalSeats,
-}: {
-  scores: Record<Party, number>;
-  totalSeats: number;
-}) {
-  const safeTotal = totalSeats || 1;
-  const sorted = [...PARTIES].sort((a, b) => scores[b] - scores[a]);
+type HeaderSummary = {
+  totalConstituencies: number;
+  dataReference: string;
+  projectedWinner: string;
+  averageWinningScore: string;
+};
+
+const EMPTY_HEADER_SUMMARY: HeaderSummary = {
+  totalConstituencies: 0,
+  dataReference: "-",
+  projectedWinner: "-",
+  averageWinningScore: "-",
+};
+
+function buildHeaderSummary(meta: AnalysisMeta, rows: AnalysisPredictionRow[]): HeaderSummary {
+  const totalConstituencies = rows.length;
+
+  let dataReference: string;
+  if (meta.analysis_type === "live_intelligence_score") {
+    dataReference = "Live data";
+  } else {
+    const refYears = meta.lok_sabha_reference_years;
+    const earliest = refYears.length > 0 ? Math.min(...refYears) : meta.cm_election_year;
+    dataReference = `${earliest} - ${meta.cm_election_year}`;
+  }
+
+  const seatCounts: Record<Party, number> = {
+    DMK_ALLIANCE: 0,
+    AIADMK_NDA: 0,
+    TVK: 0,
+    NTK: 0,
+    OTHERS: 0,
+  };
+  let winningScoreSum = 0;
+
+  for (const row of rows) {
+    const winner = row.analysis_predicted ?? row.predicted;
+    if (winner in seatCounts) {
+      seatCounts[winner as Party] += 1;
+    }
+    winningScoreSum += row.win_probability ?? row.confidence ?? 0;
+  }
+
+  const maxSeats = Math.max(...PARTIES.map((p) => seatCounts[p]));
+  const topParties = PARTIES.filter((p) => seatCounts[p] === maxSeats);
+  const projectedWinner = maxSeats > 0
+    ? topParties.map((p) => PARTY_LABELS[p]).join(" / ")
+    : "-";
+
+  const avgWinningScore = totalConstituencies > 0
+    ? winningScoreSum / totalConstituencies
+    : 0;
+
+  return {
+    totalConstituencies,
+    dataReference,
+    projectedWinner,
+    averageWinningScore: asPercentSmart(avgWinningScore),
+  };
+}
+
+type FilterState = {
+  district: string;
+  party: Party | "ALL";
+  query: string;
+};
+
+type CenterCardProps = {
+  rows: AnalysisPredictionRow[];
+  districts: string[];
+  filter: FilterState;
+  onFilterChange: (next: FilterState) => void;
+  constituencyOptions: string[];
+};
+
+function CenterCard({
+  rows,
+  districts,
+  filter,
+  onFilterChange,
+  constituencyOptions,
+}: CenterCardProps) {
+  const [districtOpen, setDistrictOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const districtRef = useRef<HTMLDivElement | null>(null);
+  const searchRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!searchOpen && !districtOpen) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (searchOpen && searchRef.current && !searchRef.current.contains(target)) {
+        setSearchOpen(false);
+      }
+      if (districtOpen && districtRef.current && !districtRef.current.contains(target)) {
+        setDistrictOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [searchOpen, districtOpen]);
+
+  const counts = useMemo(() => {
+    const c: Record<Party, number> = {
+      DMK_ALLIANCE: 0,
+      AIADMK_NDA: 0,
+      TVK: 0,
+      NTK: 0,
+      OTHERS: 0,
+    };
+    for (const row of rows) {
+      // Use the analysis-specific winner so each tab produces its own
+      // distribution. Fallback to the base predicted winner if the
+      // backend hasn't added the analysis_predicted field.
+      const winner = row.analysis_predicted ?? row.predicted;
+      if (winner in c) {
+        c[winner as Party] += 1;
+      }
+    }
+    return c;
+  }, [rows]);
+  const total = rows.length;
+  const safeTotal = total || 1;
+  const sortedParties = useMemo(
+    () => [...DISPLAY_PARTIES].sort((a, b) => counts[b] - counts[a]),
+    [counts],
+  );
+
   return (
-    <div className="bar-list">
-      {sorted.map((p) => (
-        <div className="bar-item" key={p}>
-          <div className="bar-top">
-            <span>{PARTY_LABELS[p]}</span>
-            <span>
-              {scores[p].toFixed(3)} ({asSeatPercent(scores[p] * 100, safeTotal)})
-            </span>
+    <article className="panel center-card">
+      <div className="center-inner-grid">
+        <section className="inner-block filters-block">
+          <h2>Filters</h2>
+          <div className="filters-grid">
+            <div className="combo-wrap" ref={districtRef}>
+              <label htmlFor="analysis-district">District</label>
+              <button
+                id="analysis-district"
+                type="button"
+                className="combo-toggle"
+                aria-haspopup="listbox"
+                aria-expanded={districtOpen}
+                onClick={() => setDistrictOpen((o) => !o)}
+              >
+                <span>{filter.district === "ALL" ? "All Districts" : filter.district}</span>
+                <span className="combo-chevron" aria-hidden="true">▾</span>
+              </button>
+              {districtOpen && (
+                <ul className="combo-list" role="listbox">
+                  <li
+                    role="option"
+                    aria-selected={filter.district === "ALL"}
+                    className="combo-item"
+                    onClick={() => {
+                      onFilterChange({ ...filter, district: "ALL" });
+                      setDistrictOpen(false);
+                    }}
+                  >
+                    All Districts
+                  </li>
+                  {districts.map((d) => (
+                    <li
+                      key={d}
+                      role="option"
+                      aria-selected={filter.district === d}
+                      className="combo-item"
+                      onClick={() => {
+                        onFilterChange({ ...filter, district: d });
+                        setDistrictOpen(false);
+                      }}
+                    >
+                      {d}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="analysis-party">Predicted Party</label>
+              <select
+                id="analysis-party"
+                value={filter.party}
+                onChange={(e) =>
+                  onFilterChange({ ...filter, party: e.target.value as Party | "ALL" })
+                }
+              >
+                <option value="ALL">All Parties</option>
+                {DISPLAY_PARTIES.map((p) => (
+                  <option key={p} value={p}>
+                    {PARTY_LABELS[p]}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="search-wrap" ref={searchRef}>
+              <label htmlFor="analysis-search">Search Constituency</label>
+              <input
+                id="analysis-search"
+                type="text"
+                value={filter.query}
+                placeholder="Type or select..."
+                autoComplete="off"
+                role="combobox"
+                aria-expanded={searchOpen}
+                aria-controls="analysis-constituency-list"
+                onChange={(e) => {
+                  onFilterChange({ ...filter, query: e.target.value });
+                  setSearchOpen(true);
+                }}
+                onFocus={() => setSearchOpen(true)}
+              />
+              {searchOpen && constituencyOptions.length > 0 && (
+                <ul
+                  id="analysis-constituency-list"
+                  className="combo-list"
+                  role="listbox"
+                >
+                  {constituencyOptions.map((name) => (
+                    <li
+                      key={name}
+                      role="option"
+                      aria-selected={filter.query === name}
+                      className="combo-item"
+                      onClick={() => {
+                        onFilterChange({ ...filter, query: name });
+                        setSearchOpen(false);
+                      }}
+                    >
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-          <div className="bar-track">
-            <div
-              className={`bar-fill fill-${p}`}
-              style={{ width: `${Math.min(100, scores[p] * 100)}%` }}
-            />
+        </section>
+
+        <section className="inner-block seat-distribution-block">
+          <h2>Seat Distribution</h2>
+          <div className="bar-list">
+            {sortedParties.map((p) => (
+              <div className="bar-item" key={p}>
+                <div className="bar-top">
+                  <span>{PARTY_LABELS[p]}</span>
+                  <span>
+                    {counts[p]} ({asSeatPercent(counts[p], safeTotal)})
+                  </span>
+                </div>
+                <div className="bar-track">
+                  <div
+                    className={`bar-fill fill-${p}`}
+                    style={{ width: `${(counts[p] / safeTotal) * 100}%` }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
-      ))}
-    </div>
+        </section>
+      </div>
+    </article>
   );
 }
 
-function MetaHeader({ meta }: { meta: AnalysisMeta }) {
+function DistrictBreakdownCard({ rows }: { rows: AnalysisPredictionRow[] }) {
+  const districtBreakdown = useMemo(() => {
+    const map = new Map<string, Record<Party, number>>();
+    for (const row of rows) {
+      const winner = (row.analysis_predicted ?? row.predicted) as Party;
+      if (!map.has(row.district)) {
+        map.set(row.district, {
+          DMK_ALLIANCE: 0,
+          AIADMK_NDA: 0,
+          TVK: 0,
+          NTK: 0,
+          OTHERS: 0,
+        });
+      }
+      const counts = map.get(row.district)!;
+      if (winner in counts) counts[winner] += 1;
+    }
+    return [...map.entries()]
+      .map(([name, counts]) => ({
+        name,
+        ...counts,
+        total:
+          counts.DMK_ALLIANCE +
+          counts.AIADMK_NDA +
+          counts.TVK +
+          counts.NTK +
+          counts.OTHERS,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [rows]);
+
   return (
-    <div className="analysis-meta-grid">
-      <div>
-        <span className="muted">Selected Analysis</span>
-        <strong>{ANALYSIS_LABELS[meta.analysis_type]}</strong>
+    <article className="panel">
+      <h2>District Breakdown</h2>
+      <div className="district-list">
+        {districtBreakdown.map((d) => (
+          <div key={d.name} className="district-item">
+            <div className="district-head">
+              <strong>{d.name}</strong>
+              <span>{d.total} seats</span>
+            </div>
+            <div className="district-bars">
+              {DISPLAY_PARTIES.map((p) => (
+                <div
+                  key={p}
+                  className={`district-segment segment-${p}`}
+                  style={{ width: `${(d[p] / (d.total || 1)) * 100}%` }}
+                  title={`${PARTY_LABELS[p]}: ${d[p]}`}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
-      <div>
-        <span className="muted">CM Election Year</span>
-        <strong>{meta.cm_election_year}</strong>
-      </div>
-      <div>
-        <span className="muted">PM / Lok Sabha Reference</span>
-        <strong>{meta.lok_sabha_reference_years.join(", ")}</strong>
-      </div>
-      <div>
-        <span className="muted">Gap Years</span>
-        <strong>{meta.gap_years}</strong>
-      </div>
-      <div>
-        <span className="muted">Gap Category</span>
-        <strong>{meta.gap_category}</strong>
-      </div>
-      <div>
-        <span className="muted">Mode</span>
-        <strong>{meta.prediction_mode ? "Prediction" : "Final Result"}</strong>
-      </div>
-    </div>
+    </article>
+  );
+}
+
+function CompetitiveSeatsCard({
+  rows,
+  scoreKey,
+}: {
+  rows: AnalysisPredictionRow[];
+  scoreKey: keyof AnalysisPredictionRow;
+}) {
+  const closestSeats = useMemo(() => {
+    return [...rows]
+      .filter((r) => typeof r[scoreKey] === "number")
+      .sort((a, b) => (a[scoreKey] as number) - (b[scoreKey] as number))
+      .slice(0, 8);
+  }, [rows, scoreKey]);
+
+  return (
+    <article className="panel">
+      <h2>Most Competitive Seats</h2>
+      <ul className="tight-list">
+        {closestSeats.map((seat) => {
+          const score = seat[scoreKey] as number;
+          const winner = (seat.analysis_predicted ?? seat.predicted) as Party;
+          return (
+            <li key={`${seat.ac_no}-${seat.constituency}`}>
+              <div>
+                <strong>{seat.constituency}</strong>
+                <small>{seat.district}</small>
+              </div>
+              <div className="right-inline">
+                <PartyBadge party={winner} />
+                <span>{asPercentSmart(score)} Score</span>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </article>
+  );
+}
+
+function MetaHeader({ summary }: { summary: HeaderSummary }) {
+  // Reuse the same .kpi-grid / .kpi-card classes the Default Prediction
+  // header uses (AnimatedKpiGrid), so the analysis-tab header is visually
+  // identical -- just with four tiles instead of three. No section title
+  // is rendered inside the card; the active tab pill above already names it.
+  return (
+    <section className="kpi-grid analysis-kpi-grid">
+      <article className="panel kpi-card">
+        <h3>Total Constituencies</h3>
+        <strong>{summary.totalConstituencies}</strong>
+      </article>
+      <article className="panel kpi-card">
+        <h3>Data Reference</h3>
+        <strong>{summary.dataReference}</strong>
+      </article>
+      <article className="panel kpi-card">
+        <h3>Projected Winner</h3>
+        <strong>{summary.projectedWinner}</strong>
+      </article>
+      <article className="panel kpi-card">
+        <h3>Average Winning Score</h3>
+        <strong>{summary.averageWinningScore}</strong>
+      </article>
+    </section>
   );
 }
 
@@ -107,7 +442,7 @@ function VoteShareTrendCard({ meta }: { meta: AnalysisMeta }) {
   const growth: Partial<Record<Party, number>> = specific.party_growth_score ?? {};
 
   return (
-    <article className="panel">
+    <article className="panel analysis-card">
       <h3>Vote-share Trend (2016 - 2021 - 2026)</h3>
       <table className="compact-table">
         <thead>
@@ -144,24 +479,6 @@ function VoteShareTrendCard({ meta }: { meta: AnalysisMeta }) {
   );
 }
 
-function PartyScorePanel({
-  meta,
-  totalSeats,
-}: {
-  meta: AnalysisMeta;
-  totalSeats: number;
-}) {
-  return (
-    <article className="panel">
-      <h3>Party-wise Score (state level)</h3>
-      <PartyScoreBars
-        scores={meta.party_average_score as Record<Party, number>}
-        totalSeats={totalSeats}
-      />
-    </article>
-  );
-}
-
 function SeatSwingCard({ meta }: { meta: AnalysisMeta }) {
   const specific = meta.analysis_specific as {
     seat_swing_trend?: Partial<Record<Party, Record<string, number>>>;
@@ -170,7 +487,7 @@ function SeatSwingCard({ meta }: { meta: AnalysisMeta }) {
     specific.seat_swing_trend ?? {};
 
   return (
-    <article className="panel">
+    <article className="panel analysis-card">
       <h3>Seat Swing (2016 - 2021 - 2026)</h3>
       <table className="compact-table">
         <thead>
@@ -218,7 +535,7 @@ function AssemblyShareCard({ meta }: { meta: AnalysisMeta }) {
     specific.assembly_state_share?.["2026_predicted"] ?? {};
 
   return (
-    <article className="panel">
+    <article className="panel analysis-card">
       <h3>2021 Assembly vs 2026 Prediction</h3>
       <table className="compact-table">
         <thead>
@@ -261,7 +578,7 @@ function SwingMomentumCard({ meta }: { meta: AnalysisMeta }) {
   const ls2024: Partial<Record<Party, number>> = specific.lok_sabha_state_share_2024 ?? {};
 
   return (
-    <article className="panel">
+    <article className="panel analysis-card">
       <h3>2024 Lok Sabha Influence &amp; Swing</h3>
       <table className="compact-table">
         <thead>
@@ -317,7 +634,7 @@ function SentimentScoresCard({ meta }: { meta: AnalysisMeta }) {
   const liveScore: Partial<Record<Party, number>> = specific.party_live_intelligence_score ?? {};
 
   return (
-    <article className="panel">
+    <article className="panel analysis-card">
       <h3>Sentiment Scores by Party</h3>
       <table className="compact-table">
         <thead>
@@ -359,7 +676,7 @@ function TvkImpactCard({ meta }: { meta: AnalysisMeta }) {
   const tvkMetrics: Record<string, number> = specific.tvk_impact_metrics ?? {};
 
   return (
-    <article className="panel">
+    <article className="panel analysis-card">
       <h3>TVK / Vijay Impact</h3>
       {leaderNames.TVK && (
         <p className="muted" style={{ marginTop: 0 }}>
@@ -403,7 +720,6 @@ function ConstituencyTable({
       return [
         { header: "2021 Winner", key: "winner_party_2021" },
         { header: "2021 Runner-Up", key: "runner_up_party_2021" },
-        { header: "Incumbency", key: "incumbency_status" },
         { header: "Constituency Swing", key: "constituency_swing" },
         { header: "Retention Prob.", key: "seat_retention_probability" },
         { header: "Swing Score", key: "recent_swing_score" },
@@ -420,10 +736,12 @@ function ConstituencyTable({
   const sortedRows = [...rows].sort((a, b) => a.ac_no - b.ac_no);
 
   return (
-    <article className="panel table-panel">
+    <article className="panel table-panel analysis-table-panel">
       <div className="table-head">
         <h3>Constituency-level {ANALYSIS_LABELS[analysisType]}</h3>
-        <span className="table-meta">{sortedRows.length} constituencies analysed</span>
+        <div className="table-head-actions">
+          <span className="table-meta">{sortedRows.length} constituencies analysed</span>
+        </div>
       </div>
       <div className="table-wrap">
         <table>
@@ -480,6 +798,53 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
   const [data, setData] = useState<AnalysisResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<FilterState>({
+    district: "ALL",
+    party: "ALL",
+    query: "",
+  });
+  const deferredQuery = useDeferredValue(filter.query);
+
+  const allRows = data?.rows ?? [];
+
+  const districts = useMemo(
+    () =>
+      [...new Set(allRows.map((r) => r.district))].sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [allRows],
+  );
+
+  const constituencyOptions = useMemo(() => {
+    const q = deferredQuery.trim().toLowerCase();
+    const base = q
+      ? allRows.filter((r) => r.constituency.toLowerCase().includes(q))
+      : allRows;
+    return [...base]
+      .sort((a, b) => a.ac_no - b.ac_no)
+      .map((r) => r.constituency);
+  }, [allRows, deferredQuery]);
+
+  const filteredRows = useMemo(() => {
+    const q = deferredQuery.trim().toLowerCase();
+    return allRows.filter((r) => {
+      const districtOk = filter.district === "ALL" || r.district === filter.district;
+      const winner = r.analysis_predicted ?? r.predicted;
+      const partyOk = filter.party === "ALL" || winner === filter.party;
+      const queryOk = q.length === 0 || r.constituency.toLowerCase().includes(q);
+      return districtOk && partyOk && queryOk;
+    });
+  }, [allRows, filter.district, filter.party, deferredQuery]);
+
+  const headerSummary = useMemo<HeaderSummary>(
+    () => (data ? buildHeaderSummary(data.meta, filteredRows) : EMPTY_HEADER_SUMMARY),
+    [data, filteredRows],
+  );
+
+  // Reset filters when switching analysis tabs.
+  useEffect(() => {
+    setFilter({ district: "ALL", party: "ALL", query: "" });
+  }, [analysisType]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -518,40 +883,55 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
   }
   if (!data) return null;
 
-  const { meta, rows } = data;
+  const { meta } = data;
+
+  const centerCardProps: CenterCardProps = {
+    rows: filteredRows,
+    districts,
+    filter,
+    onFilterChange: setFilter,
+    constituencyOptions,
+  };
+  const scoreKey = SCORE_KEY[analysisType];
 
   return (
     <section className="analysis-section">
-      <article className="panel">
-        <h2>{ANALYSIS_LABELS[analysisType]}</h2>
-        <MetaHeader meta={meta} />
-      </article>
+      <MetaHeader summary={headerSummary} />
 
-      {analysisType === "long_term_trend" && (
-        <div className="analysis-trio-grid">
-          <VoteShareTrendCard meta={meta} />
-          <PartyScorePanel meta={meta} totalSeats={rows.length} />
-          <SeatSwingCard meta={meta} />
-        </div>
-      )}
+      <section className="middle-stage analysis-middle-stage">
+        <aside className="left-stack">
+          <DistrictBreakdownCard rows={filteredRows} />
+        </aside>
 
-      {analysisType === "live_intelligence_score" && (
-        <div className="analysis-trio-grid">
-          <SentimentScoresCard meta={meta} />
-          <PartyScorePanel meta={meta} totalSeats={rows.length} />
-          <TvkImpactCard meta={meta} />
-        </div>
-      )}
+        <CenterCard {...centerCardProps} />
 
-      {analysisType === "recent_swing" && (
-        <div className="analysis-trio-grid">
-          <AssemblyShareCard meta={meta} />
-          <PartyScorePanel meta={meta} totalSeats={rows.length} />
-          <SwingMomentumCard meta={meta} />
-        </div>
-      )}
+        <aside className="right-stack">
+          <CompetitiveSeatsCard rows={filteredRows} scoreKey={scoreKey} />
+        </aside>
+      </section>
 
-      <ConstituencyTable rows={rows} analysisType={analysisType} />
+      <div className="analysis-detail-grid">
+        {analysisType === "long_term_trend" && (
+          <>
+            <VoteShareTrendCard meta={meta} />
+            <SeatSwingCard meta={meta} />
+          </>
+        )}
+        {analysisType === "recent_swing" && (
+          <>
+            <AssemblyShareCard meta={meta} />
+            <SwingMomentumCard meta={meta} />
+          </>
+        )}
+        {analysisType === "live_intelligence_score" && (
+          <>
+            <SentimentScoresCard meta={meta} />
+            <TvkImpactCard meta={meta} />
+          </>
+        )}
+      </div>
+
+      <ConstituencyTable rows={filteredRows} analysisType={analysisType} />
     </section>
   );
 }
