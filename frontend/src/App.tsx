@@ -2,6 +2,7 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { PartyBadge } from "./components/PartyBadge";
 import { AnimatedKpiGrid } from "./components/AnimatedKpiGrid";
+import { AnalysisPanel } from "./components/AnalysisPanel";
 import {
   API_BASE,
   EXPECTED_API_VERSION,
@@ -11,6 +12,9 @@ import {
   fetchPredictionsMeta,
 } from "./services/api";
 import {
+  ANALYSIS_LABELS,
+  ANALYSIS_TYPES,
+  AnalysisType,
   PARTIES,
   PARTY_LABELS,
   PredictionRow,
@@ -84,6 +88,7 @@ export function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [analysisType, setAnalysisType] = useState<AnalysisType | "default">("default");
   const [district, setDistrict] = useState("ALL");
   const [party, setParty] = useState<Party | "ALL">("ALL");
   const [query, setQuery] = useState("");
@@ -320,6 +325,34 @@ export function App() {
         {loading && <div className="panel loading">Loading predictions...</div>}
 
         {!loading && !error && (
+          <>
+            <nav className="analysis-tabs" aria-label="Prediction analysis filter">
+              <button
+                type="button"
+                className={`analysis-tab ${analysisType === "default" ? "active" : ""}`}
+                onClick={() => setAnalysisType("default")}
+              >
+                Default Prediction
+              </button>
+              {ANALYSIS_TYPES.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  className={`analysis-tab ${analysisType === t ? "active" : ""}`}
+                  onClick={() => setAnalysisType(t)}
+                >
+                  {ANALYSIS_LABELS[t]}
+                </button>
+              ))}
+            </nav>
+
+            {analysisType !== "default" && (
+              <AnalysisPanel analysisType={analysisType} />
+            )}
+          </>
+        )}
+
+        {!loading && !error && analysisType === "default" && (
           <>
             <AnimatedKpiGrid
               totalConstituencies={total}

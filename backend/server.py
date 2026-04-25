@@ -6,13 +6,29 @@ import traceback
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from config import (
     DATA_FILES_DIR,
     PREDICTIONS_DIR,
     VALIDATION_DIR,
 )
+
+# Analysis-filter system (long_term_trend / recent_swing / live_intelligence_score).
+# Defensive import so /api/predictions stays up even if the analysis CSVs
+# are missing -- the analysis-typed branch surfaces the error explicitly.
+_ANALYSIS_IMPORT_OK = False
+_ANALYSIS_IMPORT_ERROR = ""
+try:
+    from analysis import (  # type: ignore
+        ANALYSIS_TYPES,
+        build_analysis_context,
+        run_analysis,
+    )
+    _ANALYSIS_IMPORT_OK = True
+except Exception as _exc:  # pragma: no cover - diagnostic only
+    ANALYSIS_TYPES = ("long_term_trend", "recent_swing", "live_intelligence_score")
+    _ANALYSIS_IMPORT_ERROR = f"{type(_exc).__name__}: {_exc}"
 
 # Optional sentiment feature. Defensive import so the server ALWAYS boots,
 # even if requests/pandas/torch or the sentiment modules themselves fail to
@@ -401,8 +417,66 @@ class ElectionAPIHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", CORS_ALLOWED_HEADERS)
         self.end_headers()
 
+    def _get_query_param(self, key: str) -> str:
+        qs = parse_qs(urlparse(self.path).query)
+        values = qs.get(key) or []
+        return values[0].strip() if values else ""
+
+    def _handle_analysis_predictions(self, analysis_type: str) -> None:
+        """
+        Serve `/api/predictions?analysis_type=...`. Returns an envelope:
+            {
+                "analysis_type": ...,
+                "meta": {...},
+                "rows": [...],
+            }
+        Default `/api/predictions` (no analysis_type) is unchanged and
+        continues to return the bare rows list -- existing frontend code
+        keeps working.
+        """
+        if not _ANALYSIS_IMPORT_OK:
+            self._send_json(
+                {
+                    "error": "Analysis module failed to import",
+                    "import_error": _ANALYSIS_IMPORT_ERROR,
+                },
+                status=500,
+            )
+            return
+        if analysis_type not in ANALYSIS_TYPES:
+            self._send_json(
+                {
+                    "error": f"Unknown analysis_type '{analysis_type}'",
+                    "supported_analysis_types": list(ANALYSIS_TYPES),
+                },
+                status=400,
+            )
+            return
+        try:
+            rows, meta = run_analysis(analysis_type)
+            self._send_json(
+                {
+                    "analysis_type": analysis_type,
+                    "meta": meta,
+                    "rows": rows,
+                },
+                extra_headers={
+                    "X-API-Version": API_VERSION,
+                    "X-Analysis-Type": analysis_type,
+                },
+            )
+        except FileNotFoundError as exc:
+            self._send_json({"error": str(exc)}, status=404)
+        except ValueError as exc:
+            self._send_json({"error": str(exc)}, status=400)
+        except Exception as exc:
+            self._send_json(
+                {"error": f"Unexpected server error: {exc}"}, status=500
+            )
+
     def do_GET(self):
-        path = urlparse(self.path).path
+        parsed = urlparse(self.path)
+        path = parsed.path
 
         if path == "/api/health":
             try:
@@ -419,6 +493,10 @@ class ElectionAPIHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/predictions":
+            analysis_type = self._get_query_param("analysis_type")
+            if analysis_type:
+                self._handle_analysis_predictions(analysis_type)
+                return
             try:
                 rows, source_file, fallback_in_use = self._load_predictions()
                 self._send_json(
@@ -433,6 +511,43 @@ class ElectionAPIHandler(BaseHTTPRequestHandler):
                 )
             except FileNotFoundError as exc:
                 self._send_json({"error": str(exc)}, status=404)
+            except Exception as exc:
+                self._send_json({"error": f"Unexpected server error: {exc}"}, status=500)
+            return
+
+        if path == "/api/predictions/analysis/meta":
+            analysis_type = self._get_query_param("analysis_type")
+            if not analysis_type:
+                self._send_json(
+                    {
+                        "supported_analysis_types": list(ANALYSIS_TYPES),
+                        "weights": {
+                            "long_term_trend": 0.40,
+                            "recent_swing": 0.35,
+                            "live_intelligence_score": 0.25,
+                        },
+                        "election_year_mapping": {
+                            "2016_assembly": "2014_lok_sabha",
+                            "2021_assembly": "2019_lok_sabha",
+                            "2026_assembly": "2024_lok_sabha",
+                        },
+                        "prediction_mode": True,
+                    }
+                )
+                return
+            if not _ANALYSIS_IMPORT_OK:
+                self._send_json(
+                    {
+                        "error": "Analysis module failed to import",
+                        "import_error": _ANALYSIS_IMPORT_ERROR,
+                    },
+                    status=500,
+                )
+                return
+            try:
+                self._send_json(build_analysis_context(analysis_type))
+            except ValueError as exc:
+                self._send_json({"error": str(exc)}, status=400)
             except Exception as exc:
                 self._send_json({"error": f"Unexpected server error: {exc}"}, status=500)
             return
@@ -470,7 +585,11 @@ class ElectionAPIHandler(BaseHTTPRequestHandler):
                 "available_routes": [
                     "/api/health",
                     "/api/predictions",
+                    "/api/predictions?analysis_type=long_term_trend",
+                    "/api/predictions?analysis_type=recent_swing",
+                    "/api/predictions?analysis_type=live_intelligence_score",
                     "/api/predictions/meta",
+                    "/api/predictions/analysis/meta",
                     "/api/sentiment",
                     "/api/sentiment/health",
                 ],

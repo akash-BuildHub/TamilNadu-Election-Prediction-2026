@@ -1158,3 +1158,107 @@ tbody tr:hover {
     animation: none !important;
   }
 }
+
+/* ---- Analysis filter system ----------------------------------------- */
+.analysis-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 24px;
+}
+
+.analysis-tab {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.analysis-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.analysis-tab.active {
+  background: linear-gradient(135deg, #5b8def, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(91, 141, 239, 0.35);
+}
+
+.analysis-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.analysis-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.analysis-meta-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.analysis-meta-grid .muted {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.65;
+}
+
+.analysis-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 960px) {
+  .analysis-detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.analysis-trio-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+
+@media (min-width: 1100px) {
+  .analysis-trio-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.compact-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.compact-table th,
+.compact-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.compact-table th {
+  font-weight: 600;
+  opacity: 0.85;
+}

@@ -1,4 +1,10 @@
-import { HealthResponse, PredictionRow, PredictionsMeta } from "../types/prediction";
+import {
+  AnalysisResponse,
+  AnalysisType,
+  HealthResponse,
+  PredictionRow,
+  PredictionsMeta,
+} from "../types/prediction";
 
 /**
  * API Base URL Configuration
@@ -262,6 +268,28 @@ export async function fetchPredictions(signal?: AbortSignal): Promise<Prediction
     }
     throw error;
   }
+}
+
+export async function fetchAnalysisPredictions(
+  analysisType: AnalysisType,
+  signal?: AbortSignal
+): Promise<AnalysisResponse> {
+  const response = await fetchWithApiFallback(
+    `/api/predictions?analysis_type=${encodeURIComponent(analysisType)}`,
+    { signal, cache: "no-store" }
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Failed to load ${analysisType} analysis (${response.status} ${response.statusText}) from ${API_BASE}`
+    );
+  }
+  const body = (await response.json()) as AnalysisResponse;
+  if (!body || !Array.isArray(body.rows) || !body.meta) {
+    throw new Error(
+      `Malformed analysis response for ${analysisType}: missing rows/meta.`
+    );
+  }
+  return body;
 }
 
 export { API_BASE };
