@@ -25,20 +25,16 @@ type AnalysisPanelProps = {
   analysisType: AnalysisType;
 };
 
-const SCORE_KEY: Record<AnalysisType, keyof AnalysisPredictionRow> = {
-  long_term_trend: "long_term_trend_score",
-  recent_swing: "recent_swing_score",
-  live_intelligence_score: "live_intelligence_score",
-};
-
 function fmtScore(value: unknown): string {
   if (typeof value !== "number" || Number.isNaN(value)) return "-";
   return value.toFixed(3);
 }
 
-function fmtPct(value: unknown): string {
-  if (typeof value !== "number" || Number.isNaN(value)) return "-";
-  return asPercentSmart(value);
+// Used in every analysis-tab section so all four cards (KPI, bar chart,
+// district breakdown, competitive list, table) report the same number for
+// the same seat. Mirrors the Default view's reliance on `row.confidence`.
+function rowWinningScore(row: AnalysisPredictionRow): number {
+  return row.win_probability ?? row.confidence ?? 0;
 }
 
 type HeaderSummary = {
@@ -370,26 +366,18 @@ function DistrictBreakdownCard({ rows }: { rows: AnalysisPredictionRow[] }) {
   );
 }
 
-function CompetitiveSeatsCard({
-  rows,
-  scoreKey,
-}: {
-  rows: AnalysisPredictionRow[];
-  scoreKey: keyof AnalysisPredictionRow;
-}) {
+function CompetitiveSeatsCard({ rows }: { rows: AnalysisPredictionRow[] }) {
   const closestSeats = useMemo(() => {
     return [...rows]
-      .filter((r) => typeof r[scoreKey] === "number")
-      .sort((a, b) => (a[scoreKey] as number) - (b[scoreKey] as number))
+      .sort((a, b) => rowWinningScore(a) - rowWinningScore(b))
       .slice(0, 8);
-  }, [rows, scoreKey]);
+  }, [rows]);
 
   return (
     <article className="panel">
       <h2>Most Competitive Seats</h2>
       <ul className="tight-list">
         {closestSeats.map((seat) => {
-          const score = seat[scoreKey] as number;
           const winner = (seat.analysis_predicted ?? seat.predicted) as Party;
           return (
             <li key={`${seat.ac_no}-${seat.constituency}`}>
@@ -399,7 +387,7 @@ function CompetitiveSeatsCard({
               </div>
               <div className="right-inline">
                 <PartyBadge party={winner} />
-                <span>{asPercentSmart(score)} Score</span>
+                <span>{asPercentSmart(rowWinningScore(seat))} Score</span>
               </div>
             </li>
           );
@@ -596,22 +584,25 @@ function ConstituencyTable({
             </tr>
           </thead>
           <tbody>
-            {sortedRows.map((row) => (
-              <tr key={`${row.ac_no}-${row.constituency}`}>
-                <td>{row.ac_no}</td>
-                <td>{row.constituency}</td>
-                <td>{row.district}</td>
-                <td>
-                  <PartyBadge party={row.predicted} />
-                </td>
-                <td>{asPercentSmart(row.confidence)}</td>
-                <td>{asPercentPrecise(row.DMK_ALLIANCE)}</td>
-                <td>{asPercentPrecise(row.AIADMK_NDA)}</td>
-                <td>{asPercentPrecise(row.TVK)}</td>
-                <td>{asPercentPrecise(row.NTK)}</td>
-                <td>{asPercentPrecise(row.OTHERS)}</td>
-              </tr>
-            ))}
+            {sortedRows.map((row) => {
+              const winner = (row.analysis_predicted ?? row.predicted) as Party;
+              return (
+                <tr key={`${row.ac_no}-${row.constituency}`}>
+                  <td>{row.ac_no}</td>
+                  <td>{row.constituency}</td>
+                  <td>{row.district}</td>
+                  <td>
+                    <PartyBadge party={winner} />
+                  </td>
+                  <td>{asPercentSmart(rowWinningScore(row))}</td>
+                  <td>{asPercentPrecise(row.DMK_ALLIANCE)}</td>
+                  <td>{asPercentPrecise(row.AIADMK_NDA)}</td>
+                  <td>{asPercentPrecise(row.TVK)}</td>
+                  <td>{asPercentPrecise(row.NTK)}</td>
+                  <td>{asPercentPrecise(row.OTHERS)}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -717,7 +708,6 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
     onFilterChange: setFilter,
     constituencyOptions,
   };
-  const scoreKey = SCORE_KEY[analysisType];
 
   return (
     <section className="analysis-section">
@@ -731,7 +721,7 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
         <CenterCard {...centerCardProps} />
 
         <aside className="right-stack">
-          <CompetitiveSeatsCard rows={filteredRows} scoreKey={scoreKey} />
+          <CompetitiveSeatsCard rows={filteredRows} />
         </aside>
       </section>
 
