@@ -668,6 +668,30 @@ def build_analysis_context(analysis_type: str) -> dict:
     }
 
 
+_NON_TVK_PARTIES = ("DMK_ALLIANCE", "AIADMK_NDA", "NTK", "OTHERS")
+
+
+def _suppress_tvk_in_row(row: dict) -> None:
+    """
+    TVK was founded in 2024 and has no signal in the historical actuals
+    (2011/2016/2021) or the 2024 Lok Sabha tables. The long-term-trend and
+    recent-swing views therefore must not produce TVK winners; only the
+    live-intelligence view (which carries actual TVK sentiment) is allowed
+    to. This mutator re-picks both the model winner and the analysis winner
+    from the four non-TVK alliances when either is TVK. The TVK probability
+    column itself is left intact for transparency.
+    """
+    def best_non_tvk():
+        return max(_NON_TVK_PARTIES, key=lambda p: row.get(p, 0.0))
+
+    if row.get("predicted") == "TVK":
+        new_pred = best_non_tvk()
+        row["predicted"] = new_pred
+        row["confidence"] = row.get(new_pred, 0.0)
+    if row.get("analysis_predicted") == "TVK":
+        row["analysis_predicted"] = best_non_tvk()
+
+
 def run_analysis(analysis_type: str) -> Tuple[List[dict], dict]:
     """
     Public entry point. Returns (rows, meta) for the requested analysis
@@ -685,6 +709,10 @@ def run_analysis(analysis_type: str) -> Tuple[List[dict], dict]:
             f"Unknown analysis_type '{analysis_type}'. "
             f"Expected one of: {', '.join(ANALYSIS_TYPES)}."
         )
+
+    if analysis_type != "live_intelligence_score":
+        for r in rows:
+            _suppress_tvk_in_row(r)
 
     # Always blend in the final prediction score so the UI can render a
     # single "Final Prediction Score" column regardless of which analysis

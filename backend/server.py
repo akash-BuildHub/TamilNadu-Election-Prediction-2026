@@ -119,13 +119,31 @@ def _to_int(value, default=0):
         return default
 
 
+# TVK was founded in 2024 and has no signal in the 2011/2016/2021 actuals or
+# 2024 Lok Sabha tables. The default view and the long-term-trend / recent-swing
+# analysis views therefore must not produce TVK winners; only the live
+# intelligence view (which carries actual sentiment for TVK) is allowed to.
+# This helper suppresses TVK at the row level by re-picking the winner from
+# the four non-TVK alliances using the row's existing probabilities. The TVK
+# probability column itself is left intact for transparency.
+_NON_TVK_PARTIES = ("DMK_ALLIANCE", "AIADMK_NDA", "NTK", "OTHERS")
+
+
+def _suppress_tvk_winner(row):
+    if row.get("predicted") == "TVK":
+        new_pred = max(_NON_TVK_PARTIES, key=lambda p: row.get(p, 0.0))
+        row["predicted"] = new_pred
+        row["confidence"] = row.get(new_pred, 0.0)
+    return row
+
+
 def _load_rows_from_predictions_file(path: Path = PREDICTIONS_FILE):
     rows = []
     with path.open("r", encoding="utf-8", newline="") as fp:
         reader = csv.DictReader(fp)
         for row in reader:
             rows.append(
-                {
+                _suppress_tvk_winner({
                     "ac_no": _to_int(row.get("ac_no", 0)),
                     "constituency": row.get("constituency", ""),
                     "district": row.get("district", ""),
@@ -136,7 +154,7 @@ def _load_rows_from_predictions_file(path: Path = PREDICTIONS_FILE):
                     "TVK": _to_float(row.get("TVK", 0)),
                     "NTK": _to_float(row.get("NTK", 0)),
                     "OTHERS": _to_float(row.get("OTHERS", 0)),
-                }
+                })
             )
     return rows
 
@@ -166,7 +184,7 @@ def _load_rows_from_assembly_fallback():
             confidence = shares.get(predicted, 0.0)
 
             rows.append(
-                {
+                _suppress_tvk_winner({
                     "ac_no": _to_int(row.get("ac_no", 0)),
                     "constituency": row.get("ac_name", row.get("constituency", "")),
                     "district": row.get("district", ""),
@@ -177,7 +195,7 @@ def _load_rows_from_assembly_fallback():
                     "TVK": shares["TVK"],
                     "NTK": shares["NTK"],
                     "OTHERS": shares["OTHERS"],
-                }
+                })
             )
     return rows
 

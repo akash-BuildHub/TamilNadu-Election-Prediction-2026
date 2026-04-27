@@ -25,10 +25,6 @@ import { asPercentPrecise, asPercentSmart, asSeatPercent } from "./utils/format"
 
 // Parties displayed in bars / filters / table columns.
 const DISPLAY_PARTIES: Party[] = ["DMK_ALLIANCE", "AIADMK_NDA", "TVK", "NTK", "OTHERS"];
-// Backend "confidence" is the top-1 predicted-party probability (range 0.25
-// to 1.0 for 4 classes). 0.60 cleanly separates confident calls from
-// competitive ones.
-const HIGH_MARGIN_THRESHOLD = 0.6;
 const EXPECTED_TOTAL_CONSTITUENCIES = 234;
 let hasAnimatedMiddleStageInSession = false;
 
@@ -202,7 +198,12 @@ export function App() {
 
   const seatCounts = useMemo(() => getSeatCounts(filteredRows), [filteredRows]);
   const sortedParties = useMemo(() => {
-    return [...DISPLAY_PARTIES].sort((a, b) => seatCounts[b] - seatCounts[a]);
+    // Sort by seat count desc, but always pin OTHERS to the last position.
+    return [...DISPLAY_PARTIES].sort((a, b) => {
+      if (a === "OTHERS") return 1;
+      if (b === "OTHERS") return -1;
+      return seatCounts[b] - seatCounts[a];
+    });
   }, [seatCounts]);
   const total = filteredRows.length;
   const safeTotal = total || 1;
@@ -219,14 +220,6 @@ export function App() {
   const averageWinMargin = useMemo(() => {
     return filteredRows.reduce((sum, r) => sum + r.confidence, 0) / safeTotal;
   }, [filteredRows, safeTotal]);
-  const highMarginSeats = useMemo(() => {
-    return filteredRows.reduce(
-      (count, row) =>
-        count + (row.confidence >= HIGH_MARGIN_THRESHOLD ? 1 : 0),
-      0,
-    );
-  }, [filteredRows]);
-
   const closestSeats = useMemo(() => {
     return [...filteredRows]
       .sort((a, b) => a.confidence - b.confidence)
@@ -556,9 +549,9 @@ export function App() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
               >
-                <h2 className="explorer-title">Constituency Explorer</h2>
-                <div className="table-head-actions">
-                  <span className="table-meta">High Score Seats: {highMarginSeats}</span>
+                <div className="explorer-title-block">
+                  <h2 className="explorer-title">Constituency-level Historical Projection</h2>
+                  <p className="explorer-subtitle">{rows.length} constituencies analysed</p>
                 </div>
               </motion.div>
               <motion.div

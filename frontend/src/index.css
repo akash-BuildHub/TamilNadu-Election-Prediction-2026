@@ -1289,6 +1289,48 @@ tbody tr:hover {
   font-feature-settings: "smcp" 1, "c2sc" 1;
 }
 
+.analysis-card-tagline {
+  margin: -0.25rem 0 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.tvk-impact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 1rem;
+}
+
+.tvk-impact-cell {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.45rem 0.6rem;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 0.55rem;
+}
+
+.tvk-impact-label {
+  font-size: 0.82rem;
+  color: #3f4a63;
+}
+
+.tvk-impact-value {
+  font-size: 0.95rem;
+  white-space: nowrap;
+  color: #1b2568;
+}
+
+@media (max-width: 540px) {
+  .tvk-impact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .analysis-detail-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1419,4 +1461,18 @@ tbody tr:hover {
   gap: 14px;
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+.explorer-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.explorer-subtitle {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
 }

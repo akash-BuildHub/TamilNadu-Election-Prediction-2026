@@ -10,7 +10,7 @@ import {
   PARTY_LABELS,
   Party,
 } from "../types/prediction";
-import { asPercentSmart, asSeatPercent } from "../utils/format";
+import { asPercentPrecise, asPercentSmart, asSeatPercent } from "../utils/format";
 import { PartyBadge } from "./PartyBadge";
 
 const DISPLAY_PARTIES: Party[] = [
@@ -60,7 +60,7 @@ function buildHeaderSummary(meta: AnalysisMeta, rows: AnalysisPredictionRow[]): 
 
   let dataReference: string;
   if (meta.analysis_type === "live_intelligence_score") {
-    dataReference = "Live data";
+    dataReference = "LIVE DATA";
   } else {
     const refYears = meta.lok_sabha_reference_years;
     const earliest = refYears.length > 0 ? Math.min(...refYears) : meta.cm_election_year;
@@ -165,7 +165,13 @@ function CenterCard({
   const total = rows.length;
   const safeTotal = total || 1;
   const sortedParties = useMemo(
-    () => [...DISPLAY_PARTIES].sort((a, b) => counts[b] - counts[a]),
+    () =>
+      [...DISPLAY_PARTIES].sort((a, b) => {
+        // OTHERS always pinned to the last position.
+        if (a === "OTHERS") return 1;
+        if (b === "OTHERS") return -1;
+        return counts[b] - counts[a];
+      }),
     [counts],
   );
 
@@ -430,186 +436,6 @@ function MetaHeader({ summary }: { summary: HeaderSummary }) {
   );
 }
 
-function VoteShareTrendCard({ meta }: { meta: AnalysisMeta }) {
-  const specific = meta.analysis_specific as {
-    vote_share_trend?: Partial<Record<Party, number[]>>;
-    long_term_party_trend_score?: Partial<Record<Party, number>>;
-    party_growth_score?: Partial<Record<Party, number>>;
-  };
-  const vsTrend: Partial<Record<Party, number[]>> = specific.vote_share_trend ?? {};
-  const longTermScore: Partial<Record<Party, number>> =
-    specific.long_term_party_trend_score ?? {};
-  const growth: Partial<Record<Party, number>> = specific.party_growth_score ?? {};
-
-  return (
-    <article className="panel analysis-card">
-      <h3>Vote-share Trend (2016 - 2021 - 2026)</h3>
-      <table className="compact-table">
-        <thead>
-          <tr>
-            <th>Party</th>
-            <th>2016</th>
-            <th>2021</th>
-            <th>2026</th>
-            <th>Trend</th>
-            <th>Growth</th>
-          </tr>
-        </thead>
-        <tbody>
-          {PARTIES.map((p) => {
-            const trend = vsTrend[p] || [0, 0, 0];
-            return (
-              <tr key={p}>
-                <td>{PARTY_LABELS[p]}</td>
-                <td>{trend[0]?.toFixed(2)}%</td>
-                <td>{trend[1]?.toFixed(2)}%</td>
-                <td>{trend[2]?.toFixed(2)}%</td>
-                <td>{fmtScore(longTermScore[p])}</td>
-                <td>
-                  {typeof growth[p] === "number"
-                    ? `${(growth[p]! * 100).toFixed(1)}%`
-                    : "-"}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </article>
-  );
-}
-
-function SeatSwingCard({ meta }: { meta: AnalysisMeta }) {
-  const specific = meta.analysis_specific as {
-    seat_swing_trend?: Partial<Record<Party, Record<string, number>>>;
-  };
-  const seatSwing: Partial<Record<Party, Record<string, number>>> =
-    specific.seat_swing_trend ?? {};
-
-  return (
-    <article className="panel analysis-card">
-      <h3>Seat Swing (2016 - 2021 - 2026)</h3>
-      <table className="compact-table">
-        <thead>
-          <tr>
-            <th>Party</th>
-            <th>2016</th>
-            <th>2021</th>
-            <th>2026 (Pred)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {PARTIES.map((p) => {
-            const sw = seatSwing[p] || {};
-            return (
-              <tr key={p}>
-                <td>{PARTY_LABELS[p]}</td>
-                <td>{sw["2016"] ?? "-"}</td>
-                <td>{sw["2021"] ?? "-"}</td>
-                <td>{sw["2026_predicted"] ?? "-"}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </article>
-  );
-}
-
-
-type RecentSwingSpecific = {
-  recent_swing_party_score?: Partial<Record<Party, number>>;
-  party_recent_momentum?: Partial<Record<Party, number>>;
-  assembly_state_share?: {
-    "2021"?: Partial<Record<Party, number>>;
-    "2026_predicted"?: Partial<Record<Party, number>>;
-  };
-  lok_sabha_state_share_2024?: Partial<Record<Party, number>>;
-};
-
-function AssemblyShareCard({ meta }: { meta: AnalysisMeta }) {
-  const specific = meta.analysis_specific as RecentSwingSpecific;
-  const share2021: Partial<Record<Party, number>> =
-    specific.assembly_state_share?.["2021"] ?? {};
-  const share2026: Partial<Record<Party, number>> =
-    specific.assembly_state_share?.["2026_predicted"] ?? {};
-
-  return (
-    <article className="panel analysis-card">
-      <h3>2021 Assembly vs 2026 Prediction</h3>
-      <table className="compact-table">
-        <thead>
-          <tr>
-            <th>Party</th>
-            <th>2021 Share</th>
-            <th>2026 Share</th>
-            <th>Delta</th>
-          </tr>
-        </thead>
-        <tbody>
-          {PARTIES.map((p) => {
-            const a21 = share2021[p] ?? 0;
-            const a26 = share2026[p] ?? 0;
-            const delta = a26 - a21;
-            return (
-              <tr key={p}>
-                <td>{PARTY_LABELS[p]}</td>
-                <td>{a21.toFixed(2)}%</td>
-                <td>{a26.toFixed(2)}%</td>
-                <td>
-                  <strong>
-                    {delta >= 0 ? "+" : ""}
-                    {delta.toFixed(2)}%
-                  </strong>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </article>
-  );
-}
-
-function SwingMomentumCard({ meta }: { meta: AnalysisMeta }) {
-  const specific = meta.analysis_specific as RecentSwingSpecific;
-  const swingScore: Partial<Record<Party, number>> = specific.recent_swing_party_score ?? {};
-  const momentum: Partial<Record<Party, number>> = specific.party_recent_momentum ?? {};
-  const ls2024: Partial<Record<Party, number>> = specific.lok_sabha_state_share_2024 ?? {};
-
-  return (
-    <article className="panel analysis-card">
-      <h3>2024 Lok Sabha Influence &amp; Swing</h3>
-      <table className="compact-table">
-        <thead>
-          <tr>
-            <th>Party</th>
-            <th>2024 LS</th>
-            <th>Momentum</th>
-            <th>Swing Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {PARTIES.map((p) => (
-            <tr key={p}>
-              <td>{PARTY_LABELS[p]}</td>
-              <td>{(ls2024[p] ?? 0).toFixed(2)}%</td>
-              <td>
-                {typeof momentum[p] === "number"
-                  ? `${(momentum[p]! * 100).toFixed(2)}%`
-                  : "-"}
-              </td>
-              <td>
-                <strong>{fmtScore(swingScore[p])}</strong>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </article>
-  );
-}
-
 type LiveIntelSpecific = {
   party_sentiment_score?: Partial<Record<Party, number>>;
   leader_sentiment_score?: Partial<Record<Party, number>>;
@@ -636,17 +462,21 @@ function SentimentScoresCard({ meta }: { meta: AnalysisMeta }) {
   return (
     <article className="panel analysis-card">
       <h3>Sentiment Scores by Party</h3>
+      <p className="analysis-card-tagline">
+        Real-time sentiment analysis transforming public opinion into actionable
+        election insights
+      </p>
       <table className="compact-table">
         <thead>
           <tr>
-            <th>Party</th>
-            <th>Party</th>
-            <th>Leader</th>
-            <th>Cand.</th>
-            <th>Social</th>
-            <th>News</th>
-            <th>Issues</th>
-            <th>Live</th>
+            <th>Alliance</th>
+            <th title="Sentiment about the party itself">Party</th>
+            <th title="Sentiment about the alliance leader">Leader</th>
+            <th title="Sentiment about local candidates">Candidate</th>
+            <th title="Social-media sentiment">Social</th>
+            <th title="News-media sentiment">News</th>
+            <th title="Local issues / governance sentiment">Issues</th>
+            <th title="Predicted vote strength: weighted blend of the columns to the left (leader and social-media signals carry the most weight, followed by news, party, candidate, and local-issue sentiment)">Vote Strength</th>
           </tr>
         </thead>
         <tbody>
@@ -670,31 +500,60 @@ function SentimentScoresCard({ meta }: { meta: AnalysisMeta }) {
   );
 }
 
+const TVK_METRIC_LABELS: Record<string, string> = {
+  tvk_state_buzz_score: "TVK statewide buzz",
+  vijay_personal_rating: "Vijay personal rating",
+  youth_pull_score: "Youth pull",
+  first_time_voter_score: "First-time voter pull",
+  media_coverage_score: "Media coverage",
+  vote_split_risk_dmk: "Vote-split risk (DMK)",
+  vote_split_risk_aiadmk: "Vote-split risk (AIADMK)",
+  expected_vote_share_2026: "Expected 2026 vote share",
+};
+
+const TVK_PERCENT_KEYS = new Set([
+  "expected_vote_share_2026",
+  "vote_split_risk_dmk",
+  "vote_split_risk_aiadmk",
+]);
+
+function prettyTvkLabel(key: string): string {
+  return (
+    TVK_METRIC_LABELS[key] ||
+    key
+      .split("_")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ")
+  );
+}
+
+function formatTvkValue(key: string, value: number): string {
+  if (TVK_PERCENT_KEYS.has(key)) {
+    return `${(value * 100).toFixed(1)}%`;
+  }
+  return value.toFixed(2);
+}
+
 function TvkImpactCard({ meta }: { meta: AnalysisMeta }) {
   const specific = meta.analysis_specific as LiveIntelSpecific;
-  const leaderNames: Partial<Record<Party, string>> = specific.leader_names ?? {};
   const tvkMetrics: Record<string, number> = specific.tvk_impact_metrics ?? {};
 
   return (
     <article className="panel analysis-card">
       <h3>TVK / Vijay Impact</h3>
-      {leaderNames.TVK && (
-        <p className="muted" style={{ marginTop: 0 }}>
-          Leader: <strong>{leaderNames.TVK}</strong>
-        </p>
-      )}
-      <table className="compact-table">
-        <tbody>
-          {Object.entries(tvkMetrics).map(([k, v]) => (
-            <tr key={k}>
-              <td>{k.split("_").join(" ")}</td>
-              <td>
-                <strong>{Number(v).toFixed(3)}</strong>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <p className="analysis-card-tagline">
+        From fanbase to vote base &mdash; decoding Vijay&rsquo;s political impact.
+      </p>
+      <div className="tvk-impact-grid">
+        {Object.entries(tvkMetrics).map(([k, v]) => (
+          <div className="tvk-impact-cell" key={k}>
+            <span className="tvk-impact-label">{prettyTvkLabel(k)}</span>
+            <strong className="tvk-impact-value">
+              {formatTvkValue(k, Number(v))}
+            </strong>
+          </div>
+        ))}
+      </div>
     </article>
   );
 }
@@ -706,41 +565,18 @@ function ConstituencyTable({
   rows: AnalysisPredictionRow[];
   analysisType: AnalysisType;
 }) {
-  const columns: { header: string; key: keyof AnalysisPredictionRow }[] = (() => {
-    if (analysisType === "long_term_trend") {
-      return [
-        { header: "2016 Winner", key: "winner_2016" },
-        { header: "2021 Winner", key: "winner_2021" },
-        { header: "Historical Strength", key: "historical_strength" },
-        { header: "Party Growth", key: "party_growth_score" },
-        { header: "Long-Term Score", key: "long_term_trend_score" },
-      ];
-    }
-    if (analysisType === "recent_swing") {
-      return [
-        { header: "2021 Winner", key: "winner_party_2021" },
-        { header: "2021 Runner-Up", key: "runner_up_party_2021" },
-        { header: "Constituency Swing", key: "constituency_swing" },
-        { header: "Retention Prob.", key: "seat_retention_probability" },
-        { header: "Swing Score", key: "recent_swing_score" },
-      ];
-    }
-    return [
-      { header: "Sentiment-Adjusted", key: "sentiment_adjusted_prediction" },
-      { header: "TVK Impact", key: "tvk_impact_score" },
-      { header: "Confidence Level", key: "confidence_level" },
-      { header: "Live Score", key: "live_intelligence_score" },
-    ];
-  })();
-
   const sortedRows = [...rows].sort((a, b) => a.ac_no - b.ac_no);
 
   return (
     <article className="panel table-panel analysis-table-panel">
       <div className="table-head">
-        <h3>Constituency-level {ANALYSIS_LABELS[analysisType]}</h3>
-        <div className="table-head-actions">
-          <span className="table-meta">{sortedRows.length} constituencies analysed</span>
+        <div className="explorer-title-block">
+          <h3 className="explorer-title">
+            Constituency-level {ANALYSIS_LABELS[analysisType]}
+          </h3>
+          <p className="explorer-subtitle">
+            {sortedRows.length} constituencies analysed
+          </p>
         </div>
       </div>
       <div className="table-wrap">
@@ -751,11 +587,12 @@ function ConstituencyTable({
               <th>Constituency</th>
               <th>District</th>
               <th>Predicted</th>
-              <th>Win Prob.</th>
-              {columns.map((c) => (
-                <th key={String(c.key)}>{c.header}</th>
-              ))}
-              <th>Final Score</th>
+              <th>Winning Score</th>
+              <th>DMK</th>
+              <th>AIADMK</th>
+              <th>TVK</th>
+              <th>NTK</th>
+              <th>Others</th>
             </tr>
           </thead>
           <tbody>
@@ -767,24 +604,12 @@ function ConstituencyTable({
                 <td>
                   <PartyBadge party={row.predicted} />
                 </td>
-                <td>{fmtPct(row.win_probability ?? row.confidence)}</td>
-                {columns.map((c) => {
-                  const value = row[c.key];
-                  let display: string;
-                  if (typeof value === "number") {
-                    display = c.key === "constituency_swing" || c.key === "party_growth_score"
-                      ? `${(value * 100).toFixed(2)}%`
-                      : fmtScore(value);
-                  } else if (Array.isArray(value)) {
-                    display = value.join(", ");
-                  } else {
-                    display = value !== undefined && value !== "" ? String(value) : "-";
-                  }
-                  return <td key={String(c.key)}>{display}</td>;
-                })}
-                <td>
-                  <strong>{fmtScore(row.final_prediction_score)}</strong>
-                </td>
+                <td>{asPercentSmart(row.confidence)}</td>
+                <td>{asPercentPrecise(row.DMK_ALLIANCE)}</td>
+                <td>{asPercentPrecise(row.AIADMK_NDA)}</td>
+                <td>{asPercentPrecise(row.TVK)}</td>
+                <td>{asPercentPrecise(row.NTK)}</td>
+                <td>{asPercentPrecise(row.OTHERS)}</td>
               </tr>
             ))}
           </tbody>
@@ -910,26 +735,12 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
         </aside>
       </section>
 
-      <div className="analysis-detail-grid">
-        {analysisType === "long_term_trend" && (
-          <>
-            <VoteShareTrendCard meta={meta} />
-            <SeatSwingCard meta={meta} />
-          </>
-        )}
-        {analysisType === "recent_swing" && (
-          <>
-            <AssemblyShareCard meta={meta} />
-            <SwingMomentumCard meta={meta} />
-          </>
-        )}
-        {analysisType === "live_intelligence_score" && (
-          <>
-            <SentimentScoresCard meta={meta} />
-            <TvkImpactCard meta={meta} />
-          </>
-        )}
-      </div>
+      {analysisType === "live_intelligence_score" && (
+        <div className="analysis-detail-grid">
+          <SentimentScoresCard meta={meta} />
+          <TvkImpactCard meta={meta} />
+        </div>
+      )}
 
       <ConstituencyTable rows={filteredRows} analysisType={analysisType} />
     </section>
