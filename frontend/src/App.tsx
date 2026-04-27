@@ -332,7 +332,7 @@ export function App() {
                 className={`analysis-tab ${analysisType === "default" ? "active" : ""}`}
                 onClick={() => setAnalysisType("default")}
               >
-                Default Prediction
+                Historical Projection
               </button>
               {ANALYSIS_TYPES.map((t) => (
                 <button

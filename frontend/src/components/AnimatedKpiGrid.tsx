@@ -119,6 +119,10 @@ export function AnimatedKpiGrid({
         <strong>{animatedTotal}</strong>
       </article>
       <article className="panel kpi-card">
+        <h3>Data Reference</h3>
+        <strong>2011 &ndash; 2026</strong>
+      </article>
+      <article className="panel kpi-card">
         <h3>Projected Winner</h3>
         <strong className="winner-roll-box" aria-live="polite">
           <span className="winner-roll-text" key={winnerRollToken}>

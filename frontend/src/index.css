@@ -176,7 +176,7 @@ body {
 .kpi-grid {
   display: grid;
   gap: 0;
-  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
   border-radius: 1.15rem;
   overflow: hidden;
   border: 1px solid var(--glass-border);
@@ -1206,6 +1206,7 @@ tbody tr:hover {
   color: #fff;
   box-shadow: 0 4px 18px rgba(91, 141, 239, 0.35);
 }
+
 
 .analysis-section {
   display: flex;

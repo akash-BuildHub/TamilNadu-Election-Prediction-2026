@@ -10,6 +10,7 @@ from urllib.parse import parse_qs, urlparse
 
 from config import (
     DATA_FILES_DIR,
+    DATASET_DIR,
     PREDICTIONS_DIR,
     VALIDATION_DIR,
 )
@@ -49,6 +50,13 @@ except Exception as _exc:  # pragma: no cover - diagnostic only
 
 ROOT = Path(__file__).resolve().parent
 PREDICTIONS_FILE = Path(PREDICTIONS_DIR) / "predictions_2026.csv"
+HISTORICAL_RESULTS_FILE = (
+    Path(DATASET_DIR) / "historical_results" / "tamilnadu_constituency_results_2011_2021.csv"
+)
+# Years the historical dataset is meant to cover. 2011 is pending until the
+# user drops backend/dataset/opencity_tn_2011.csv.
+HISTORICAL_YEARS = (2011, 2016, 2021)
+HISTORICAL_PENDING_SOURCE_REL = "backend/dataset/opencity_tn_2011.csv"
 # Legacy location (kept for read-only backward compatibility). We never
 # write new files here; see _load_rows_from_predictions_file() below.
 LEGACY_PREDICTIONS_FILE = ROOT / "predictions_2026.csv"
@@ -315,6 +323,83 @@ def _build_sentiment_payload() -> dict:
     return payload
 
 
+def _load_historical_results(path: Path = HISTORICAL_RESULTS_FILE):
+    """Load the consolidated historical CSV and build a year-aware meta block.
+
+    Returns (rows, meta). If the file is missing the call raises FileNotFoundError.
+    rows are kept as plain dicts (numerics coerced) so the JSON envelope
+    serializes cleanly.
+    """
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Historical results CSV not found at {path}. "
+            f"Run `python backend/build_consolidated_historical.py` to (re)build it."
+        )
+
+    rows = []
+    with path.open("r", encoding="utf-8", newline="") as fp:
+        reader = csv.DictReader(fp)
+        for r in reader:
+            rows.append({
+                "year": _to_int(r.get("year")),
+                "ac_no": _to_int(r.get("ac_no")),
+                "ac_name": (r.get("ac_name") or "").strip(),
+                "district": (r.get("district") or "").strip(),
+                "winner": (r.get("winner") or "").strip(),
+                "winner_party": (r.get("winner_party") or "").strip(),
+                "runner_up": (r.get("runner_up") or "").strip(),
+                "runner_party": (r.get("runner_party") or "").strip(),
+                "winner_votes": _to_int(r.get("winner_votes")),
+                "runner_votes": _to_int(r.get("runner_votes")),
+                "margin_votes": _to_int(r.get("margin_votes")),
+                "winner_vote_share": _to_float(r.get("winner_vote_share")),
+                "runner_vote_share": _to_float(r.get("runner_vote_share")),
+            })
+
+    per_year = {}
+    for y in HISTORICAL_YEARS:
+        ys = [r for r in rows if r["year"] == y]
+        if not ys:
+            per_year[str(y)] = {
+                "present": False,
+                "rows": 0,
+                "alliance_breakdown": None,
+            }
+            continue
+        breakdown = {}
+        for r in ys:
+            wp = r["winner_party"] or "OTHERS"
+            breakdown[wp] = breakdown.get(wp, 0) + 1
+        per_year[str(y)] = {
+            "present": True,
+            "rows": len(ys),
+            "alliance_breakdown": breakdown,
+        }
+
+    pending_years = [y for y in HISTORICAL_YEARS if not per_year[str(y)]["present"]]
+
+    meta = {
+        "source_file": path.name,
+        "source_path": str(path),
+        "source_sha256": _file_sha256(path),
+        "last_modified_utc": _iso_mtime_utc(path),
+        "total_rows": len(rows),
+        "expected_total_rows": 234 * len(HISTORICAL_YEARS),
+        "years_covered": [int(y) for y in HISTORICAL_YEARS if per_year[str(y)]["present"]],
+        "years_pending": pending_years,
+        "per_year": per_year,
+        "pending_source_path": HISTORICAL_PENDING_SOURCE_REL if pending_years else None,
+        "data_source": "TCPD / Lok Dhaba mirror of ECI Form 21 (verified)",
+        "notes": (
+            "2016 ACs 134 (Aravakurichi) and 174 (Thanjavur) had their general "
+            "polls countermanded by ECI; bye-election outcomes (AIADMK won both) "
+            "are encoded with vote counts = 0 (TCPD bulk source did not carry "
+            "the bye-election rows)."
+        ),
+    }
+    return rows, meta
+
+
 def _build_predictions_meta(rows, source_file: Path, fallback_in_use: bool):
     counts = _seat_counts(rows)
     projected_winner = "-"
@@ -562,6 +647,38 @@ class ElectionAPIHandler(BaseHTTPRequestHandler):
                 self._send_json({"error": f"Unexpected server error: {exc}"}, status=500)
             return
 
+        if path == "/api/historical/results":
+            try:
+                rows, meta = _load_historical_results()
+                self._send_json(
+                    {"meta": meta, "rows": rows},
+                    extra_headers={
+                        "X-API-Version": API_VERSION,
+                        "X-Historical-Source": meta["source_file"],
+                        "X-Historical-SHA256": meta["source_sha256"],
+                        "X-Historical-Last-Modified-Utc": meta["last_modified_utc"],
+                    },
+                )
+            except FileNotFoundError as exc:
+                self._send_json({"error": str(exc)}, status=404)
+            except Exception as exc:
+                self._send_json(
+                    {"error": f"Unexpected server error: {exc}"}, status=500
+                )
+            return
+
+        if path == "/api/historical/meta":
+            try:
+                _rows, meta = _load_historical_results()
+                self._send_json(meta)
+            except FileNotFoundError as exc:
+                self._send_json({"error": str(exc)}, status=404)
+            except Exception as exc:
+                self._send_json(
+                    {"error": f"Unexpected server error: {exc}"}, status=500
+                )
+            return
+
         if path == "/api/sentiment/health":
             # Always 200 -- this endpoint IS the diagnostic.
             self._send_json(_build_sentiment_health())
@@ -590,6 +707,8 @@ class ElectionAPIHandler(BaseHTTPRequestHandler):
                     "/api/predictions?analysis_type=live_intelligence_score",
                     "/api/predictions/meta",
                     "/api/predictions/analysis/meta",
+                    "/api/historical/results",
+                    "/api/historical/meta",
                     "/api/sentiment",
                     "/api/sentiment/health",
                 ],
