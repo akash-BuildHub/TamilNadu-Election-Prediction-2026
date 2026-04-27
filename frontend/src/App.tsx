@@ -21,12 +21,11 @@ import {
   Party,
   PredictionsMeta,
 } from "./types/prediction";
-import { asPercentPrecise, asPercentSmart, asSeatPercent } from "./utils/format";
+import { asPercent, asPercentPrecise, asPercentSmart, asSeatPercent } from "./utils/format";
 
 // Parties displayed in bars / filters / table columns.
 const DISPLAY_PARTIES: Party[] = ["DMK_ALLIANCE", "AIADMK_NDA", "TVK", "NTK", "OTHERS"];
 const EXPECTED_TOTAL_CONSTITUENCIES = 234;
-let hasAnimatedMiddleStageInSession = false;
 
 function zeroCounts(): Record<Party, number> {
   return { DMK_ALLIANCE: 0, AIADMK_NDA: 0, TVK: 0, NTK: 0, OTHERS: 0 };
@@ -93,7 +92,6 @@ export function App() {
   const searchRef = useRef<HTMLDivElement | null>(null);
   const districtRef = useRef<HTMLDivElement | null>(null);
   const middleStageRef = useRef<HTMLElement | null>(null);
-  const hasAnimatedMiddleStageRef = useRef(hasAnimatedMiddleStageInSession);
   const prefersReducedMotion = useReducedMotion();
   const deferredQuery = useDeferredValue(query);
 
@@ -250,38 +248,17 @@ export function App() {
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [filteredRows]);
 
+  // Re-fire the middle-stage card entrance every time the Default tab is
+  // mounted (or re-mounted after returning from an analysis tab). Forcing
+  // a reflow between class removal and re-addition restarts the CSS
+  // animations declared on `.middle-stage.animate-cards .center-card` etc.
   useEffect(() => {
     const element = middleStageRef.current;
-    if (!element || loading || error || hasAnimatedMiddleStageRef.current) return;
-
-    const triggerStageAnimationOnce = () => {
-      if (hasAnimatedMiddleStageRef.current) return;
-      hasAnimatedMiddleStageRef.current = true;
-      hasAnimatedMiddleStageInSession = true;
-      element.classList.add("animate-cards");
-    };
-
-    if (typeof IntersectionObserver === "undefined") {
-      triggerStageAnimationOnce();
-      return;
-    }
-
-    const observer = new IntersectionObserver((entries, observerInstance) => {
-      const shouldAnimate = entries.some(
-        (entry) => entry.isIntersecting && entry.intersectionRatio >= 0.12,
-      );
-      if (!shouldAnimate) return;
-      triggerStageAnimationOnce();
-      observerInstance.disconnect();
-    }, { threshold: [0, 0.12] });
-
-    observer.observe(element);
-    const fallbackTimerId = window.setTimeout(triggerStageAnimationOnce, 300);
-    return () => {
-      window.clearTimeout(fallbackTimerId);
-      observer.disconnect();
-    };
-  }, [loading, error]);
+    if (!element || loading || error) return;
+    element.classList.remove("animate-cards");
+    void element.offsetWidth;
+    element.classList.add("animate-cards");
+  }, [loading, error, analysisType]);
 
   const projectedWinnerLabel =
     projectedWinner === "-" ? "-" : PARTY_LABELS[projectedWinner];
@@ -340,7 +317,7 @@ export function App() {
             </nav>
 
             {analysisType !== "default" && (
-              <AnalysisPanel analysisType={analysisType} />
+              <AnalysisPanel key={analysisType} analysisType={analysisType} />
             )}
           </>
         )}
@@ -348,9 +325,16 @@ export function App() {
         {!loading && !error && analysisType === "default" && (
           <>
             <AnimatedKpiGrid
-              totalConstituencies={total}
-              projectedWinner={projectedWinnerLabel}
-              averageWinMargin={averageWinMargin}
+              animateToken={`default-${total}-${projectedWinnerLabel}`}
+              cards={[
+                { heading: "Total Constituencies", value: total },
+                { heading: "Data Reference", value: "2011 – 2026" },
+                { heading: "Projected Winner", value: projectedWinnerLabel },
+                {
+                  heading: "Average Winning Score",
+                  value: asPercent(averageWinMargin),
+                },
+              ]}
             />
 
             <section className="middle-stage" ref={middleStageRef}>

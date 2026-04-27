@@ -1,139 +1,61 @@
-import { useEffect, useRef, useState } from "react";
-import { asPercent } from "../utils/format";
+import { ReactNode } from "react";
 
-interface AnimatedKpiGridProps {
-  totalConstituencies: number;
-  projectedWinner: string;
-  averageWinMargin: number;
-}
+export type KpiCard = {
+  heading: string;
+  value: ReactNode;
+};
 
-let hasAnimatedKpiInSession = false;
+type AnimatedKpiGridProps = {
+  cards: KpiCard[];
+  /** Changing this value forces every card's heading + value to re-fire the
+   *  roll-in animation. Pass the active analysis tab id (e.g. "default",
+   *  "long_term_trend") so switching tabs replays the entrance. */
+  animateToken?: string | number;
+};
 
-export function AnimatedKpiGrid({
-  totalConstituencies,
-  projectedWinner,
-  averageWinMargin,
-}: AnimatedKpiGridProps) {
-  const kpiGridRef = useRef<HTMLElement | null>(null);
-  const hasAnimatedRef = useRef(hasAnimatedKpiInSession);
-  const previousWinnerRef = useRef(hasAnimatedRef.current ? projectedWinner : "");
-  const [animatedWinMargin, setAnimatedWinMargin] = useState(
-    hasAnimatedRef.current ? averageWinMargin : 0,
-  );
-  const [animatedTotal, setAnimatedTotal] = useState(
-    hasAnimatedRef.current ? totalConstituencies : 0,
-  );
-  const [animatedWinner, setAnimatedWinner] = useState(
-    hasAnimatedRef.current ? projectedWinner : "",
-  );
-  const [winnerRollToken, setWinnerRollToken] = useState(
-    hasAnimatedRef.current ? 1 : 0,
-  );
+/** Per-card stagger so the four cards roll in sequence rather than in
+ *  unison. Heading rolls in first; value follows ~120ms later. */
+const HEADING_STAGGER_MS = 70;
+const VALUE_STAGGER_MS = 70;
+const VALUE_HEAD_OFFSET_MS = 120;
 
-  useEffect(() => {
-    if (!hasAnimatedRef.current) return;
-    setAnimatedWinMargin(averageWinMargin);
-    setAnimatedTotal(totalConstituencies);
-    if (previousWinnerRef.current !== projectedWinner) {
-      previousWinnerRef.current = projectedWinner;
-      setAnimatedWinner(projectedWinner);
-      setWinnerRollToken((prev) => prev + 1);
-    }
-  }, [averageWinMargin, totalConstituencies, projectedWinner]);
-
-  useEffect(() => {
-    const element = kpiGridRef.current;
-    if (!element || hasAnimatedRef.current) return;
-
-    let confidenceFrameId = 0;
-    let totalFrameId = 0;
-
-    const triggerAnimationOnce = () => {
-      if (hasAnimatedRef.current) return;
-      hasAnimatedRef.current = true;
-      hasAnimatedKpiInSession = true;
-
-      const confidenceDurationMs = 1200;
-      const confidenceStart = performance.now();
-      const confidenceTarget = averageWinMargin;
-      const confidenceTick = (now: number) => {
-        const t = Math.min((now - confidenceStart) / confidenceDurationMs, 1);
-        const eased = 1 - Math.pow(1 - t, 3);
-        setAnimatedWinMargin(confidenceTarget * eased);
-        if (t < 1) {
-          confidenceFrameId = requestAnimationFrame(confidenceTick);
-        }
-      };
-      confidenceFrameId = requestAnimationFrame(confidenceTick);
-
-      const totalDurationMs = 900;
-      const totalStart = performance.now();
-      const totalTarget = totalConstituencies;
-      const totalTick = (now: number) => {
-        const t = Math.min((now - totalStart) / totalDurationMs, 1);
-        const eased = 1 - Math.pow(1 - t, 3);
-        setAnimatedTotal(Math.round(totalTarget * eased));
-        if (t < 1) {
-          totalFrameId = requestAnimationFrame(totalTick);
-        }
-      };
-      totalFrameId = requestAnimationFrame(totalTick);
-
-      previousWinnerRef.current = projectedWinner;
-      setAnimatedWinner(projectedWinner);
-      setWinnerRollToken((prev) => prev + 1);
-    };
-
-    if (typeof IntersectionObserver === "undefined") {
-      triggerAnimationOnce();
-      return () => {
-        cancelAnimationFrame(confidenceFrameId);
-        cancelAnimationFrame(totalFrameId);
-      };
-    }
-
-    const observer = new IntersectionObserver((entries, observerInstance) => {
-      const shouldAnimate = entries.some(
-        (entry) => entry.isIntersecting && entry.intersectionRatio >= 0.35,
-      );
-      if (!shouldAnimate) return;
-      triggerAnimationOnce();
-      observerInstance.disconnect();
-    }, { threshold: [0, 0.35] });
-
-    observer.observe(element);
-    const fallbackTimerId = window.setTimeout(triggerAnimationOnce, 300);
-
-    return () => {
-      window.clearTimeout(fallbackTimerId);
-      observer.disconnect();
-      cancelAnimationFrame(confidenceFrameId);
-      cancelAnimationFrame(totalFrameId);
-    };
-  }, [averageWinMargin, totalConstituencies, projectedWinner]);
-
+export function AnimatedKpiGrid({ cards, animateToken = "" }: AnimatedKpiGridProps) {
   return (
-    <section className="kpi-grid" ref={kpiGridRef}>
-      <article className="panel kpi-card">
-        <h3>Total Constituencies</h3>
-        <strong>{animatedTotal}</strong>
-      </article>
-      <article className="panel kpi-card">
-        <h3>Data Reference</h3>
-        <strong>2011 &ndash; 2026</strong>
-      </article>
-      <article className="panel kpi-card">
-        <h3>Projected Winner</h3>
-        <strong className="winner-roll-box" aria-live="polite">
-          <span className="winner-roll-text" key={winnerRollToken}>
-            {animatedWinner || "-"}
-          </span>
-        </strong>
-      </article>
-      <article className="panel kpi-card">
-        <h3>Average Winning Score</h3>
-        <strong>{asPercent(animatedWinMargin)}</strong>
-      </article>
+    <section className="kpi-grid">
+      {cards.map((card, i) => (
+        <article className="panel kpi-card" key={i}>
+          <h3>
+            <span className="kpi-roll-box">
+              <span
+                className="kpi-roll-text"
+                key={`h-${i}-${animateToken}`}
+                style={{ ["--kpi-roll-delay" as string]: `${i * HEADING_STAGGER_MS}ms` }}
+              >
+                {card.heading}
+              </span>
+            </span>
+          </h3>
+          <strong aria-live="polite">
+            <span className="kpi-roll-box">
+              <span
+                className="kpi-roll-text"
+                key={`v-${i}-${animateToken}-${stringifyValue(card.value)}`}
+                style={{
+                  ["--kpi-roll-delay" as string]:
+                    `${VALUE_HEAD_OFFSET_MS + i * VALUE_STAGGER_MS}ms`,
+                }}
+              >
+                {card.value}
+              </span>
+            </span>
+          </strong>
+        </article>
+      ))}
     </section>
   );
+}
+
+function stringifyValue(v: ReactNode): string {
+  if (typeof v === "string" || typeof v === "number") return String(v);
+  return "";
 }

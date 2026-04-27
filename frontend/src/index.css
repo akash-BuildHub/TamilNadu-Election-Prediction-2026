@@ -54,6 +54,42 @@ body,
   min-height: 100%;
 }
 
+/* Defensive: prevent any single overflowing child (long-form labels, wide
+   tables before their wrapper kicks in, fixed bg-blur decorations) from
+   creating a horizontal scrollbar on mobile. */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* `min-width: 0` lets a flex/grid child shrink below its intrinsic content
+   minimum (default min-width: auto blocks shrinking and is a classic source
+   of "page wider than viewport" bugs on the analysis tabs, where deeply
+   nested grids/flex columns inherit content-min-width from the table or a
+   long heading). Combined with `max-width: 100%`, every wrapper from the
+   page shell down to the tab content panels stays inside the viewport. */
+.app-shell,
+.container,
+main.container,
+.analysis-section,
+.analysis-section > *,
+.middle-stage,
+.middle-stage > *,
+.kpi-grid,
+.kpi-card,
+.analysis-detail-grid,
+.analysis-detail-grid > *,
+.analysis-card,
+.center-card,
+.left-stack,
+.right-stack,
+.table-panel,
+.explorer-section {
+  min-width: 0;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
@@ -251,6 +287,27 @@ body {
   backface-visibility: hidden;
   transform-origin: center;
   animation: winnerRollText 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Generic 3D roll-in used for every KPI heading + value across all four
+   tabs. Same keyframes as the original "Projected Winner" effect, but
+   without the min-width so it works for any text length (headings,
+   short values, long values). animation-delay can be set via the
+   --kpi-roll-delay custom property to stagger cards. */
+.kpi-roll-box {
+  display: inline-block;
+  perspective: 420px;
+  overflow: hidden;
+  vertical-align: bottom;
+  max-width: 100%;
+}
+
+.kpi-roll-text {
+  display: inline-block;
+  backface-visibility: hidden;
+  transform-origin: center;
+  animation: winnerRollText 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--kpi-roll-delay, 0ms);
 }
 
 h2 {
@@ -619,6 +676,9 @@ select {
   background: rgba(255, 255, 255, 0.2);
   color: #3f4a63;
   font: inherit;
+  /* iOS Safari auto-zooms when an input's effective font-size is < 16px on
+     focus, which throws the layout off. Pin the minimum to 16px. */
+  font-size: max(16px, 1em);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -1072,6 +1132,99 @@ tbody tr:hover {
     padding: 0.5rem;
     font-size: 0.82rem;
   }
+
+  .analysis-tab {
+    padding: 8px 14px;
+    font-size: 0.86rem;
+    letter-spacing: 0.06em;
+  }
+
+  .analysis-tabs {
+    gap: 6px;
+    padding: 6px;
+    margin: 12px auto 18px;
+  }
+
+  .compact-table th,
+  .compact-table td {
+    padding: 6px 8px;
+    font-size: 0.82rem;
+  }
+
+  .center-card {
+    padding: 0.75rem;
+  }
+
+  .inner-block {
+    padding: 0.7rem;
+  }
+}
+
+/* Tighten further on phones smaller than ~iPhone SE / standard handset. */
+@media (max-width: 480px) {
+  .container {
+    /* width: 100vw on a child of body causes a 10-15px overflow on browsers
+       that count the scrollbar gutter inside vw. Use 100% (parent-relative)
+       and let .container's own padding shrink instead. */
+    width: 100%;
+    padding: 0 0.65rem;
+    margin-top: 0.6rem;
+  }
+
+  .panel {
+    padding: 0.7rem;
+    border-radius: 0.85rem;
+  }
+
+  .kpi-card strong {
+    font-size: 1.4rem;
+  }
+
+  .kpi-card h3 {
+    font-size: 0.86rem;
+  }
+
+  .analysis-tab {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+  }
+
+  .hero {
+    padding: 0.5rem 0.1rem 0.2rem;
+  }
+
+  .brand-title {
+    font-size: clamp(1.6rem, 6vw, 2rem);
+  }
+
+  .hero-tagline {
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+
+  th,
+  td {
+    padding: 0.4rem 0.45rem;
+    font-size: 0.78rem;
+  }
+
+  .compact-table th,
+  .compact-table td {
+    padding: 5px 7px;
+    font-size: 0.78rem;
+  }
+
+  .tvk-impact-cell {
+    padding: 0.4rem 0.55rem;
+  }
+
+  .tvk-impact-label {
+    font-size: 0.78rem;
+  }
+
+  .tvk-impact-value {
+    font-size: 0.9rem;
+  }
 }
 
 @keyframes winnerRollText {
@@ -1149,6 +1302,7 @@ tbody tr:hover {
 @media (prefers-reduced-motion: reduce) {
   .q-logo,
   .winner-roll-text,
+  .kpi-roll-text,
   .center-card,
   .left-stack,
   .right-stack,
@@ -1217,53 +1371,6 @@ tbody tr:hover {
   align-items: stretch;
 }
 
-.analysis-overview-panel {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.3),
-    rgba(246, 248, 251, 0.16)
-  );
-  border: 1px solid var(--glass-border);
-  backdrop-filter: var(--glass-blur-strong);
-  -webkit-backdrop-filter: var(--glass-blur-strong);
-  box-shadow: var(--glass-shadow-elevated);
-}
-
-.analysis-overview-panel h2 {
-  margin-bottom: 0.55rem;
-}
-
-.analysis-meta-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px;
-  margin-top: 12px;
-}
-
-.analysis-meta-grid > div {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 11px 14px;
-  border-radius: 12px;
-  background: linear-gradient(
-    140deg,
-    rgba(255, 255, 255, 0.24),
-    rgba(246, 248, 251, 0.12)
-  );
-  border: 1px solid var(--glass-border);
-  box-shadow:
-    0 4px 14px rgba(29, 42, 91, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.62);
-}
-
-.analysis-meta-grid .muted {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.65;
-}
-
 .analysis-card {
   background: linear-gradient(
     145deg,
@@ -1276,8 +1383,7 @@ tbody tr:hover {
   box-shadow: var(--glass-shadow-elevated);
 }
 
-.analysis-card h3,
-.analysis-table-panel .table-head h3 {
+.analysis-card h3 {
   margin: 0 0 0.7rem;
   font-size: 1rem;
   color: #3f4a63;
@@ -1343,98 +1449,13 @@ tbody tr:hover {
   }
 }
 
-.analysis-trio-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
-  align-items: start;
+/* Wrapper for compact tables (e.g. Sentiment Scores) so they horizontally
+   scroll on narrow viewports instead of overflowing the card. */
+.compact-table-wrap {
   width: 100%;
-  margin-inline: auto;
-  --analysis-side-offset: 2.4rem;
-}
-
-@media (min-width: 1100px) {
-  .analysis-trio-grid {
-    grid-template-columns: minmax(260px, 0.95fr) minmax(320px, 1.1fr) minmax(260px, 0.95fr);
-    justify-content: center;
-  }
-}
-
-/* Left and right trio cards drop slightly below the center card -- same
-   visual rhythm as the Default Prediction's middle-stage where the
-   left-stack / right-stack sit lower than the center-card. */
-.analysis-trio-grid > .panel {
-  display: flex;
-  flex-direction: column;
-}
-
-@media (min-width: 1100px) {
-  .analysis-trio-grid > .panel:first-child,
-  .analysis-trio-grid > .panel:last-child {
-    margin-top: var(--analysis-side-offset);
-  }
-}
-
-/* Center column on the analysis trios mirrors the Default Prediction's
-   center-card: stronger glass, Filters block on top, Seat Distribution
-   below, both wrapped in glass inner-blocks. */
-.analysis-center-card {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.3),
-    rgba(246, 248, 251, 0.16)
-  );
-  border: 1px solid var(--glass-border);
-  backdrop-filter: var(--glass-blur-strong);
-  -webkit-backdrop-filter: var(--glass-blur-strong);
-  box-shadow: var(--glass-shadow-elevated);
-}
-
-.analysis-center-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 0.95rem;
-  height: 100%;
-}
-
-.analysis-center-card .inner-block h2 {
-  margin-bottom: 0.7rem;
-}
-
-.analysis-center-card .filters-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.7rem;
-}
-
-/* Four-up KPI strip used by the analysis-tab header. Reuses the same
-   .kpi-grid base so the visual matches the Default Prediction header. */
-.analysis-kpi-grid {
-  grid-template-columns: repeat(4, minmax(180px, 1fr));
-}
-
-@media (max-width: 1200px) and (min-width: 981px) {
-  .analysis-kpi-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 980px) {
-  .analysis-kpi-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.analysis-table-panel {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.3),
-    rgba(246, 248, 251, 0.16)
-  );
-  border: 1px solid var(--glass-border);
-  backdrop-filter: var(--glass-blur-strong);
-  -webkit-backdrop-filter: var(--glass-blur-strong);
-  box-shadow: var(--glass-shadow-elevated);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .compact-table {

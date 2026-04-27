@@ -68,6 +68,7 @@ const WINDOW_HOSTNAME = typeof window !== "undefined" ? window.location.hostname
 const SHOULD_USE_SAME_ORIGIN_PROXY =
   import.meta.env.PROD &&
   isVercelHostname(WINDOW_HOSTNAME) &&
+  !EXPLICIT_API_BASE &&
   String(import.meta.env.VITE_FORCE_DIRECT_API || "").trim() !== "1";
 
 const API_BASE =

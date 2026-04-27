@@ -1,4 +1,5 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { fetchAnalysisPredictions } from "../services/api";
 import {
   AnalysisMeta,
@@ -11,6 +12,7 @@ import {
   Party,
 } from "../types/prediction";
 import { asPercentPrecise, asPercentSmart, asSeatPercent } from "../utils/format";
+import { AnimatedKpiGrid } from "./AnimatedKpiGrid";
 import { PartyBadge } from "./PartyBadge";
 
 const DISPLAY_PARTIES: Party[] = [
@@ -397,33 +399,6 @@ function CompetitiveSeatsCard({ rows }: { rows: AnalysisPredictionRow[] }) {
   );
 }
 
-function MetaHeader({ summary }: { summary: HeaderSummary }) {
-  // Reuse the same .kpi-grid / .kpi-card classes the Default Prediction
-  // header uses (AnimatedKpiGrid), so the analysis-tab header is visually
-  // identical -- just with four tiles instead of three. No section title
-  // is rendered inside the card; the active tab pill above already names it.
-  return (
-    <section className="kpi-grid analysis-kpi-grid">
-      <article className="panel kpi-card">
-        <h3>Total Constituencies</h3>
-        <strong>{summary.totalConstituencies}</strong>
-      </article>
-      <article className="panel kpi-card">
-        <h3>Data Reference</h3>
-        <strong>{summary.dataReference}</strong>
-      </article>
-      <article className="panel kpi-card">
-        <h3>Projected Winner</h3>
-        <strong>{summary.projectedWinner}</strong>
-      </article>
-      <article className="panel kpi-card">
-        <h3>Average Winning Score</h3>
-        <strong>{summary.averageWinningScore}</strong>
-      </article>
-    </section>
-  );
-}
-
 type LiveIntelSpecific = {
   party_sentiment_score?: Partial<Record<Party, number>>;
   leader_sentiment_score?: Partial<Record<Party, number>>;
@@ -454,7 +429,8 @@ function SentimentScoresCard({ meta }: { meta: AnalysisMeta }) {
         Real-time sentiment analysis transforming public opinion into actionable
         election insights
       </p>
-      <table className="compact-table">
+      <div className="compact-table-wrap">
+        <table className="compact-table">
         <thead>
           <tr>
             <th>Alliance</th>
@@ -483,7 +459,8 @@ function SentimentScoresCard({ meta }: { meta: AnalysisMeta }) {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </article>
   );
 }
@@ -549,25 +526,42 @@ function TvkImpactCard({ meta }: { meta: AnalysisMeta }) {
 function ConstituencyTable({
   rows,
   analysisType,
+  prefersReducedMotion,
 }: {
   rows: AnalysisPredictionRow[];
   analysisType: AnalysisType;
+  prefersReducedMotion: boolean | null;
 }) {
   const sortedRows = [...rows].sort((a, b) => a.ac_no - b.ac_no);
 
   return (
-    <article className="panel table-panel analysis-table-panel">
-      <div className="table-head">
+    <motion.article
+      className="panel table-panel explorer-section"
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+      animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <motion.div
+        className="table-head"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+      >
         <div className="explorer-title-block">
-          <h3 className="explorer-title">
+          <h2 className="explorer-title">
             Constituency-level {ANALYSIS_LABELS[analysisType]}
-          </h3>
+          </h2>
           <p className="explorer-subtitle">
             {sortedRows.length} constituencies analysed
           </p>
         </div>
-      </div>
-      <div className="table-wrap">
+      </motion.div>
+      <motion.div
+        className="table-wrap"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
+        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+        transition={{ duration: 0.38, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+      >
         <table>
           <thead>
             <tr>
@@ -605,8 +599,8 @@ function ConstituencyTable({
             })}
           </tbody>
         </table>
-      </div>
-    </article>
+      </motion.div>
+    </motion.article>
   );
 }
 
@@ -620,6 +614,8 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
     query: "",
   });
   const deferredQuery = useDeferredValue(filter.query);
+  const middleStageRef = useRef<HTMLElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const allRows = data?.rows ?? [];
 
@@ -661,6 +657,18 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
   useEffect(() => {
     setFilter({ district: "ALL", party: "ALL", query: "" });
   }, [analysisType]);
+
+  // Re-fire the middle-stage card entrance every time the analysis panel
+  // mounts (i.e. on every tab switch via `key={analysisType}` from App.tsx)
+  // and again as soon as data lands. Mirrors the Default tab so all four
+  // sections share the same entrance animation.
+  useEffect(() => {
+    const element = middleStageRef.current;
+    if (!element || loading || error) return;
+    element.classList.remove("animate-cards");
+    void element.offsetWidth;
+    element.classList.add("animate-cards");
+  }, [loading, error, !!data]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -711,9 +719,23 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
 
   return (
     <section className="analysis-section">
-      <MetaHeader summary={headerSummary} />
+      <AnimatedKpiGrid
+        animateToken={`${analysisType}-${headerSummary.totalConstituencies}-${headerSummary.projectedWinner}`}
+        cards={[
+          {
+            heading: "Total Constituencies",
+            value: headerSummary.totalConstituencies,
+          },
+          { heading: "Data Reference", value: headerSummary.dataReference },
+          { heading: "Projected Winner", value: headerSummary.projectedWinner },
+          {
+            heading: "Average Winning Score",
+            value: headerSummary.averageWinningScore,
+          },
+        ]}
+      />
 
-      <section className="middle-stage analysis-middle-stage">
+      <section className="middle-stage" ref={middleStageRef}>
         <aside className="left-stack">
           <DistrictBreakdownCard rows={filteredRows} />
         </aside>
@@ -732,7 +754,11 @@ export function AnalysisPanel({ analysisType }: AnalysisPanelProps) {
         </div>
       )}
 
-      <ConstituencyTable rows={filteredRows} analysisType={analysisType} />
+      <ConstituencyTable
+        rows={filteredRows}
+        analysisType={analysisType}
+        prefersReducedMotion={prefersReducedMotion}
+      />
     </section>
   );
 }
